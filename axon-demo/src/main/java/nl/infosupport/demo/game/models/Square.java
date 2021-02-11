@@ -1,10 +1,15 @@
 package nl.infosupport.demo.game.models;
 
-public class Tile {
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
+@EqualsAndHashCode
+@Getter
+public class Square {
     File file;
     int rank;
 
-    public Tile(File file, int rank) throws IllegalArgumentException {
+    public Square(File file, int rank) {
         this.file = file;
 
         if (rank < 0 || rank > 8) {

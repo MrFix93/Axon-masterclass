@@ -1,11 +1,11 @@
 package nl.infosupport.demo.game.models;
 
 public class Position {
-    Tile tile;
+    Square square;
     Piece piece;
 
-    public Position(Tile tile, Piece piece) {
-        this.tile = tile;
+    public Position(Square square, Piece piece) {
+        this.square = square;
         this.piece = piece;
     }
 }
