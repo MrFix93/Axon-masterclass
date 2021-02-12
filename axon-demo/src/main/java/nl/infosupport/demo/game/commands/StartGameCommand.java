@@ -2,7 +2,6 @@ package nl.infosupport.demo.game.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.Value;
 
 @EqualsAndHashCode(callSuper = true)

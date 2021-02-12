@@ -1,9 +1,12 @@
 package nl.infosupport.demo.game.commands;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
+@EqualsAndHashCode
 public class Command {
-    @Getter
+    @Getter(onMethod_ = {@TargetAggregateIdentifier})
     private String id;
 
     public Command() {

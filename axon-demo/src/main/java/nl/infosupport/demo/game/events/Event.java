@@ -1,18 +1,25 @@
 package nl.infosupport.demo.game.events;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import java.util.UUID;
 
-public class Event {
+@Getter
+@ToString
+@EqualsAndHashCode
+public abstract class Event {
     @Getter
-    private UUID id;
+    @TargetAggregateIdentifier
+    private final String id;
 
-    public Event() {
-        this.id = UUID.randomUUID();
+    Event() {
+        this.id = UUID.randomUUID().toString();
     }
 
-    public Event(UUID id) {
+    Event(String id) {
         this.id = id;
     }
 }
