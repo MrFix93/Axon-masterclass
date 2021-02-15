@@ -46,7 +46,7 @@ public class GameAggregate {
     public void handle(MakeMoveCommand command) throws PolicyViolatedException {
         final Move move = new Move(command.getPiece(), command.getStartPosition(), command.getEndPosition());
         try {
-            board.move(move);
+            move.make(board);
         } catch (IllegalChessMoveException e) {
             throw new PolicyViolatedException("Unable to make move", e);
         }
