@@ -18,6 +18,8 @@ public class UserAggregate {
     @AggregateIdentifier
     private String email;
     private String name;
+    private String country;
+    private String shortBio;
 
     @CommandHandler
     @CreationPolicy(value = AggregateCreationPolicy.CREATE_IF_MISSING)
@@ -33,8 +35,10 @@ public class UserAggregate {
 
     @EventSourcingHandler
     void handle(UserRegisteredEvent userRegisteredEvent) {
-        this.email = userRegisteredEvent.getUser().getEmail();
+        this.email = userRegisteredEvent.getId();
         this.name = userRegisteredEvent.getUser().getName();
+        this.country = userRegisteredEvent.getUser().getCountry();
+        this.shortBio = userRegisteredEvent.getUser().getShortBio();
     }
 
 }

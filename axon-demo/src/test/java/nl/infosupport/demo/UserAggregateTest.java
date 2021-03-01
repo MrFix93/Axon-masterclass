@@ -22,7 +22,7 @@ public class UserAggregateTest {
 
     @Test
     public void testRegisterNewUser() {
-        final User user = new User("Raymond", "test@mail.com");
+        final User user = new User("Test", "test@mail.com", "Netherlands", "Hello");
 
         fixture.givenNoPriorActivity()
                 .when(new RegisterUserCommand("test@mail.com", user))
@@ -34,7 +34,7 @@ public class UserAggregateTest {
 
     @Test
     public void testRegisterNewUserButAlreadyExists() {
-        final User user = new User("Raymond", "test@mail.com");
+        final User user = new User("Test", "test@mail.com", "Netherlands", "Hello");
 
         fixture.given(new UserRegisteredEvent("test@mail.com", user))
                 .when(new RegisterUserCommand("test@mail.com", user))
