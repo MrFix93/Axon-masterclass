@@ -4,16 +4,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Value;
 import nl.infosupport.demo.game.models.users.User;
 
-import java.util.UUID;
-
 @EqualsAndHashCode(callSuper = true)
 @Value
 public class UserRegisteredEvent extends Event {
 
     User user;
 
-    public UserRegisteredEvent(UUID uuid, User user) {
-        super(uuid);
+    public UserRegisteredEvent(String id, User user) {
+        super(id);
         this.user = user;
     }
 
