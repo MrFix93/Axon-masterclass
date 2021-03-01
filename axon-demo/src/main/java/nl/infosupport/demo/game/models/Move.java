@@ -3,6 +3,7 @@ package nl.infosupport.demo.game.models;
 import com.google.common.collect.Streams;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import nl.infosupport.demo.game.exceptions.IllegalChessMoveException;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -13,10 +14,34 @@ import java.util.stream.Stream;
 @Getter
 @EqualsAndHashCode
 public class Move {
-    Piece piece;
-    Square startSquare;
-    Square endSquare;
-    MoveType moveType;
+    private final Piece piece;
+    private final Square startSquare;
+    private final Square endSquare;
+    private final MoveType moveType;
+
+    public void make(Board board) throws IllegalChessMoveException {
+        if (!board.pieceIsAtSquare(startSquare, piece)) {
+            throw new IllegalChessMoveException("Piece cannot make this move", this);
+        }
+
+        if (board.targetSquareIsOccupiedByTheSameColor(endSquare, getMoveColor())) {
+            throw new IllegalChessMoveException("Target square is occupied by piece of the same color", this);
+        }
+
+        if (!piece.isAbleToMake(this)) {
+            throw new IllegalChessMoveException("Piece cannot make move", this);
+        }
+
+        if (!piece.canJumpOverPiece() && isObstructedMove(board)) {
+            throw new IllegalChessMoveException("Path is obstructed", this);
+        }
+
+        board.updateBoard(this);
+
+        if (board.isCheck(piece.getColor())) {
+            throw new IllegalChessMoveException("Unable to make move because you are check", this);
+        }
+    }
 
     public enum MoveType {
         CAPTURE,
@@ -41,7 +66,7 @@ public class Move {
         return piece.getColor();
     }
 
-    public TravelPath getTravelingPaths(Board board) {
+    public boolean isObstructedMove(Board board) {
         Stream<Integer> ranks = IntStream.rangeClosed(startSquare.rank, endSquare.rank)
                 .boxed();
         Stream<File> files = EnumSet.range(startSquare.file, endSquare.file)
@@ -50,6 +75,13 @@ public class Move {
         final List<Square> travelingPath = Streams.zip(files, ranks, Square::new)
                 .collect(Collectors.toList());
 
-        return new TravelPath(travelingPath, board);
+        for (Square square : travelingPath) {
+            final Piece pieceAtSquare = board.tilePieceMap.get(square);
+            if (pieceAtSquare != null) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
