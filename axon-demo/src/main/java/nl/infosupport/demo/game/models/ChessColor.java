@@ -5,6 +5,6 @@ public enum ChessColor {
     BLACK;
 
     ChessColor invert() {
-        return ChessColor.values()[this.ordinal() + 1 % 2];
+        return ChessColor.values()[(this.ordinal() + 1) % 2];
     }
 }

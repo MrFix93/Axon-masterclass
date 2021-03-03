@@ -11,24 +11,24 @@ import nl.infosupport.demo.game.models.strategies.VerticalMovingStrategy;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
-public class King extends Piece {
-    public King(ChessColor color) {
+public class Queen extends Piece {
+    public Queen(ChessColor color) {
         super(color);
     }
 
     public static Piece black() {
-        return new King(ChessColor.BLACK);
+        return new Queen(ChessColor.BLACK);
     }
 
     public static Piece white() {
-        return new King(ChessColor.WHITE);
+        return new Queen(ChessColor.WHITE);
     }
 
     @Override
     protected List<MovingStrategy> getMovingStrategies() {
-        return List.of(new HorizontalMovingStrategy(MovingStrategy.RangeMode.SINGLE),
-                new VerticalMovingStrategy(MovingStrategy.RangeMode.SINGLE),
-                new AcrossMovingStrategy(MovingStrategy.RangeMode.SINGLE)
+        return List.of(new HorizontalMovingStrategy(MovingStrategy.RangeMode.UNLIMITED),
+                new VerticalMovingStrategy(MovingStrategy.RangeMode.UNLIMITED),
+                new AcrossMovingStrategy(MovingStrategy.RangeMode.UNLIMITED)
         );
     }
 }

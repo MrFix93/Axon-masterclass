@@ -2,20 +2,44 @@ package nl.infosupport.demo.game.models;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 @EqualsAndHashCode
 @Getter
+@ToString
 public class Square {
     File file;
-    int rank;
+    Rank rank;
+
+    public Square(Rank rank, File file) {
+        this.file = file;
+        this.rank = rank;
+    }
+
+    public Square(File file, Rank rank) {
+        this.file = file;
+        this.rank = rank;
+    }
 
     public Square(File file, int rank) {
         this.file = file;
+        this.rank = new Rank(rank);
+    }
 
-        if (rank < 0 || rank > 8) {
-            throw new IllegalArgumentException("No a valid position, rank should be between 1-8");
+    public static Square of(File file, Rank rank) {
+        return new Square(file, rank);
+    }
+
+    public ChessColor getColor() {
+        if ((file.getOrdinal() + rank.getOrdinal()) % 2 == 0) {
+            return ChessColor.BLACK;
         }
 
-        this.rank = rank;
+        return ChessColor.WHITE;
     }
+
+    public Coordinate getCoordinates() {
+        return new Coordinate(file.getOrdinal(), rank.getOrdinal());
+    }
+
 }
