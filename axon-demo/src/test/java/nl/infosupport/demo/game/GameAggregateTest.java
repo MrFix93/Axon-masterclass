@@ -80,7 +80,7 @@ public class GameAggregateTest {
                 GameState.STARTED,
                 peter,
                 raymond,
-                ChessColor.WHITE);
+                ChessColor.BLACK);
 
         final MakeMoveCommand moveCommand = new MakeMoveCommand(gameId, new Pawn(ChessColor.WHITE), Squares.from("a2"), Squares.from("a3"), false, raymond);
 
