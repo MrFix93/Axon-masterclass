@@ -110,6 +110,7 @@ public class GameAggregateTest {
     @Test
     public void testMakeMove_checkMate() throws IllegalBoardSquareException {
         final String gameId = "gameId";
+        final Player blackPlayer = new Player("Raymond", ChessColor.BLACK);
 
         final GameStartedEvent gameStartedEvent = new GameStartedEvent(gameId,
                 new BoardCreator.Builder()
@@ -119,7 +120,7 @@ public class GameAggregateTest {
                         .build(),
                 GameState.STARTED,
                 new Player("Peter", ChessColor.WHITE),
-                new Player("Raymond", ChessColor.BLACK),
+                blackPlayer,
                 ChessColor.BLACK);
 
         final MakeMoveCommand rd1 = new MakeMoveCommand(gameId, Rook.black(), Squares.from("d8"), Squares.from("d1"), false);
@@ -131,7 +132,7 @@ public class GameAggregateTest {
                         new MoveMadeEvent(gameId, new Move(Rook.black(), "d8", "d1")),
                         new GameEndedEvent(gameId, List.of(
                                 new Move(Rook.black(), "d8", "d1")
-                        ), EndGameCommand.EndingReason.BLACK_WON)
+                        ), EndGameCommand.EndingReason.BLACK_WON, blackPlayer)
                 );
     }
 }

@@ -87,11 +87,11 @@ public class GameAggregate {
         apply(new MoveMadeEvent(id, move));
 
         if (CheckMateRule.isCheckMate(board, ChessColor.WHITE)) {
-            apply(new GameEndedEvent(id, movesMade, EndGameCommand.EndingReason.BLACK_WON));
+            apply(new GameEndedEvent(id, movesMade, EndGameCommand.EndingReason.BLACK_WON, blackPlayer));
         }
 
         if (CheckMateRule.isCheckMate(board, ChessColor.BLACK)) {
-            apply(new GameEndedEvent(id, movesMade, EndGameCommand.EndingReason.WHITE_WON));
+            apply(new GameEndedEvent(id, movesMade, EndGameCommand.EndingReason.WHITE_WON, whitePlayer));
         }
     }
 
