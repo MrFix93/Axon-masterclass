@@ -12,10 +12,10 @@ import java.util.List;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class GameEndedEvent extends Event {
-    EndGameCommand.EndingReason reason;
-    List<Move> movesMade;
+    private final EndGameCommand.EndingReason reason;
+    private final List<Move> movesMade;
 
-    public GameEndedEvent(String id, EndGameCommand.EndingReason reason, List<Move> movesMade) {
+    public GameEndedEvent(String id, List<Move> movesMade, EndGameCommand.EndingReason reason) {
         super(id);
         this.reason = reason;
         this.movesMade = movesMade;

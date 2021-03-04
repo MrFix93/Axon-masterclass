@@ -2,6 +2,7 @@ package nl.infosupport.demo.game.models;
 
 import nl.infosupport.demo.game.exceptions.IllegalBoardSquareException;
 import nl.infosupport.demo.game.models.pieces.*;
+import nl.infosupport.demo.game.models.rules.CheckMateRule;
 import nl.infosupport.demo.game.utils.Squares;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +17,7 @@ class BoardTest {
                 .with(new Square(File.b, 2), new King(ChessColor.BLACK))
                 .build();
 
-        assertThat(board.isCheck(ChessColor.BLACK)).isTrue();
+        assertThat(CheckMateRule.isCheck(board, ChessColor.BLACK)).isTrue();
     }
 
     @Test
@@ -27,8 +28,8 @@ class BoardTest {
                 .with(Squares.from("h6"), Bishop.black())
                 .build();
 
-        assertThat(board.isCheck(ChessColor.WHITE)).isTrue();
-        assertThat(board.isCheckMate(ChessColor.WHITE)).isFalse();
+        assertThat(CheckMateRule.isCheck(board, ChessColor.WHITE)).isTrue();
+        assertThat(CheckMateRule.isCheckMate(board, ChessColor.WHITE)).isFalse();
     }
 
     @Test
@@ -39,7 +40,7 @@ class BoardTest {
                 .with(Squares.from("f3"), King.white())
                 .build();
 
-        assertThat(board.isCheck(ChessColor.BLACK)).isFalse();
+        assertThat(CheckMateRule.isCheck(board, ChessColor.BLACK)).isFalse();
     }
 
     @Test
@@ -49,8 +50,8 @@ class BoardTest {
                 .with(Squares.from("g1"), Queen.black())
                 .build();
 
-        assertThat(board.isCheck(ChessColor.WHITE)).isTrue();
-        assertThat(board.isCheckMate(ChessColor.WHITE)).isFalse();
+        assertThat(CheckMateRule.isCheck(board, ChessColor.WHITE)).isTrue();
+        assertThat(CheckMateRule.isCheckMate(board, ChessColor.WHITE)).isFalse();
     }
 
     @Test
@@ -62,8 +63,8 @@ class BoardTest {
                 .with(Squares.from("f3"), Knight.black())
                 .build();
 
-        assertThat(board.isCheck(ChessColor.WHITE)).isTrue();
-        assertThat(board.isCheckMate(ChessColor.WHITE)).isTrue();
+        assertThat(CheckMateRule.isCheck(board, ChessColor.WHITE)).isTrue();
+        assertThat(CheckMateRule.isCheckMate(board, ChessColor.WHITE)).isTrue();
     }
 
     @Test
@@ -76,8 +77,8 @@ class BoardTest {
                 .with(Squares.from("f3"), Knight.black())
                 .build();
 
-        assertThat(board.isCheck(ChessColor.WHITE)).isTrue();
-        assertThat(board.isCheckMate(ChessColor.WHITE)).isFalse();
+        assertThat(CheckMateRule.isCheck(board, ChessColor.WHITE)).isTrue();
+        assertThat(CheckMateRule.isCheckMate(board, ChessColor.WHITE)).isFalse();
     }
 
     @Test

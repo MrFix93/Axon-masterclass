@@ -3,6 +3,7 @@ package nl.infosupport.demo.game.models;
 import nl.infosupport.demo.game.models.pieces.Bishop;
 import nl.infosupport.demo.game.models.pieces.Knight;
 import nl.infosupport.demo.game.models.pieces.Rook;
+import nl.infosupport.demo.game.utils.Path;
 import nl.infosupport.demo.game.utils.Squares;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,7 +34,7 @@ class MoveTest {
         final Move move = new Move(new Bishop(ChessColor.WHITE), Squares.from("a1"), Squares.from("h8"));
 
         List<Square> expectedPath = Squares.asList("a1", "b2", "c3", "d4", "e5", "f6", "g7", "h8");
-        final List<Square> actualPath = move.getFullPath();
+        final List<Square> actualPath = Path.constructFrom(move);
 
         assertThat(actualPath).containsExactlyInAnyOrderElementsOf(expectedPath);
     }
@@ -43,7 +44,7 @@ class MoveTest {
         final Move move = new Move(new Bishop(ChessColor.WHITE), Squares.from("h1"), Squares.from("a8"));
 
         List<Square> expectedPath = Squares.asList("h1", "g2", "f3", "e4", "d5", "c6", "b7", "a8");
-        final List<Square> actualPath = move.getFullPath();
+        final List<Square> actualPath = Path.constructFrom(move);
 
         assertThat(actualPath).containsExactlyInAnyOrderElementsOf(expectedPath);
     }
@@ -53,7 +54,7 @@ class MoveTest {
         final Move move = new Move(new Bishop(ChessColor.WHITE), Squares.from("h8"), Squares.from("a1"));
 
         List<Square> expectedPath = Squares.asList("a1", "b2", "c3", "d4", "e5", "f6", "g7", "h8");
-        final List<Square> actualPath = move.getFullPath();
+        final List<Square> actualPath = Path.constructFrom(move);
 
         assertThat(actualPath).containsExactlyInAnyOrderElementsOf(expectedPath);
     }
@@ -63,7 +64,7 @@ class MoveTest {
         final Move move = new Move(new Bishop(ChessColor.WHITE), Squares.from("a8"), Squares.from("h1"));
 
         List<Square> expectedPath = Squares.asList("h1", "g2", "f3", "e4", "d5", "c6", "b7", "a8");
-        final List<Square> actualPath = move.getFullPath();
+        final List<Square> actualPath = Path.constructFrom(move);
 
         assertThat(actualPath).containsExactlyInAnyOrderElementsOf(expectedPath);
     }
@@ -73,7 +74,7 @@ class MoveTest {
         final Move move = new Move(new Rook(ChessColor.WHITE), Squares.from("a1"), Squares.from("a8"));
 
         List<Square> expectedPath = Squares.asList("a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8");
-        final List<Square> actualPath = move.getFullPath();
+        final List<Square> actualPath = Path.constructFrom(move);
 
         assertThat(actualPath).containsExactlyInAnyOrderElementsOf(expectedPath);
     }
@@ -84,7 +85,7 @@ class MoveTest {
 
         List<Square> expectedPath = Squares.asList("a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8");
 
-        final List<Square> actualPath = move.getFullPath();
+        final List<Square> actualPath = Path.constructFrom(move);
 
         assertThat(actualPath).containsExactlyInAnyOrderElementsOf(expectedPath);
     }
@@ -94,7 +95,7 @@ class MoveTest {
         final Move move = new Move(new Rook(ChessColor.WHITE), Squares.from("a1"), Squares.from("h1"));
 
         List<Square> expectedPath = Squares.asList("a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1");
-        final List<Square> actualPath = move.getFullPath();
+        final List<Square> actualPath = Path.constructFrom(move);
 
         assertThat(actualPath).containsExactlyInAnyOrderElementsOf(expectedPath);
     }
@@ -105,7 +106,7 @@ class MoveTest {
         final Move move = new Move(new Knight(ChessColor.WHITE), startSquare, endSquare);
 
         List<Square> expectedPath = Squares.asList(startSquare, endSquare);
-        final List<Square> actualPath = move.getFullPath();
+        final List<Square> actualPath = Path.constructFrom(move);
 
         assertThat(actualPath).containsExactlyInAnyOrderElementsOf(expectedPath);
     }

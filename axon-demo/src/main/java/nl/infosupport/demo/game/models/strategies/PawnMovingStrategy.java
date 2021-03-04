@@ -14,11 +14,9 @@ import java.util.stream.Collectors;
 
 public class PawnMovingStrategy implements MovingStrategy {
 
-    ChessColor perspective;
-    Navigator navigator;
+    private final Navigator navigator;
 
     public PawnMovingStrategy(ChessColor perspective) {
-        this.perspective = perspective;
         this.navigator = new Navigator(perspective);
     }
 

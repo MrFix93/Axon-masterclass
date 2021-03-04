@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class VerticalMovingStrategy implements MovingStrategy {
 
-    RangeMode rangeMode;
+    private final RangeMode rangeMode;
 
     public VerticalMovingStrategy() {
         this.rangeMode = RangeMode.UNLIMITED;

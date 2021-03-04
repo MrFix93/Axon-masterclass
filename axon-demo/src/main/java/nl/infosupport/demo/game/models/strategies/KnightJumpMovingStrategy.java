@@ -10,10 +10,6 @@ import java.util.Optional;
 
 public class KnightJumpMovingStrategy implements MovingStrategy {
 
-    public static boolean isKnightJump(List<Rank> ranks, List<File> files) {
-        return (ranks.size() == 2 && files.size() == 3) || (ranks.size() == 3 && files.size() == 2);
-    }
-
     @Override
     public List<Square> getRange(Square currentSquare) {
         List<Square> range = new ArrayList<>();
@@ -24,6 +20,10 @@ public class KnightJumpMovingStrategy implements MovingStrategy {
         getDown(currentSquare, range);
 
         return range;
+    }
+
+    public static boolean isKnightJump(List<Rank> ranks, List<File> files) {
+        return (ranks.size() == 2 && files.size() == 3) || (ranks.size() == 3 && files.size() == 2);
     }
 
     private void getDown(Square currentSquare, List<Square> range) {

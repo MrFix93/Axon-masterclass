@@ -9,7 +9,6 @@ import nl.infosupport.demo.game.models.Move;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class MoveMadeEvent extends Event {
-    @Getter
     private final Move move;
 
     public MoveMadeEvent(String id, Move move) {

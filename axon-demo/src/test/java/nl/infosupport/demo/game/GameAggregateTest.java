@@ -42,8 +42,8 @@ public class GameAggregateTest {
                                 BoardCreator.fullBoard(),
                                 GameState.STARTED,
                                 new Player("Peter", ChessColor.WHITE),
-                                new Player("Raymond", ChessColor.BLACK)
-                        ));
+                                new Player("Raymond", ChessColor.BLACK),
+                                ChessColor.WHITE));
     }
 
     @Test
@@ -54,8 +54,8 @@ public class GameAggregateTest {
                 BoardCreator.fullBoard(),
                 GameState.STARTED,
                 new Player("Peter", ChessColor.WHITE),
-                new Player("Raymond", ChessColor.BLACK)
-        );
+                new Player("Raymond", ChessColor.BLACK),
+                ChessColor.WHITE);
 
         final MakeMoveCommand moveCommand = new MakeMoveCommand(gameId, new Pawn(ChessColor.WHITE), Squares.from("a2"), Squares.from("a3"), false);
 
@@ -73,13 +73,14 @@ public class GameAggregateTest {
                 BoardCreator.fullBoard(),
                 GameState.STARTED,
                 new Player("Peter", ChessColor.WHITE),
-                new Player("Raymond", ChessColor.BLACK)
-        );
+                new Player("Raymond", ChessColor.BLACK),
+                ChessColor.WHITE);
 
-        final MakeMoveCommand a4 = new MakeMoveCommand(gameId, new Pawn(ChessColor.WHITE), Squares.from("a3"), Squares.from("a4"), false);
         final MoveMadeEvent a3 = new MoveMadeEvent(gameId, new Move(new Pawn(ChessColor.WHITE), "a2", "a3"));
+        final MoveMadeEvent a7 = new MoveMadeEvent(gameId, new Move(new Pawn(ChessColor.BLACK), Squares.from("a7"), Squares.from("a6")));
+        final MakeMoveCommand a4 = new MakeMoveCommand(gameId, new Pawn(ChessColor.WHITE), Squares.from("a3"), Squares.from("a4"), false);
 
-        fixture.given(gameStartedEvent, a3)
+        fixture.given(gameStartedEvent, a3, a7)
                 .when(a4)
                 .expectSuccessfulHandlerExecution()
                 .expectEvents(new MoveMadeEvent(gameId, new Move(new Pawn(ChessColor.WHITE), "a3", "a4")));
@@ -93,13 +94,14 @@ public class GameAggregateTest {
                 BoardCreator.fullBoard(),
                 GameState.STARTED,
                 new Player("Peter", ChessColor.WHITE),
-                new Player("Raymond", ChessColor.BLACK)
-        );
+                new Player("Raymond", ChessColor.BLACK),
+                ChessColor.WHITE);
 
         final MakeMoveCommand a4 = new MakeMoveCommand(gameId, new Pawn(ChessColor.WHITE), Squares.from("a3"), Squares.from("a4"), false);
+        final MoveMadeEvent a7 = new MoveMadeEvent(gameId, new Move(new Pawn(ChessColor.BLACK), Squares.from("a7"), Squares.from("a6")));
         final MoveMadeEvent a3 = new MoveMadeEvent(gameId, new Move(new Pawn(ChessColor.WHITE), "a2", "a3"));
 
-        fixture.given(gameStartedEvent, a3)
+        fixture.given(gameStartedEvent, a3, a7)
                 .when(a4)
                 .expectSuccessfulHandlerExecution()
                 .expectEvents(new MoveMadeEvent(gameId, new Move(new Pawn(ChessColor.WHITE), "a3", "a4")));
@@ -117,8 +119,8 @@ public class GameAggregateTest {
                         .build(),
                 GameState.STARTED,
                 new Player("Peter", ChessColor.WHITE),
-                new Player("Raymond", ChessColor.BLACK)
-        );
+                new Player("Raymond", ChessColor.BLACK),
+                ChessColor.BLACK);
 
         final MakeMoveCommand rd1 = new MakeMoveCommand(gameId, Rook.black(), Squares.from("d8"), Squares.from("d1"), false);
 
@@ -127,9 +129,9 @@ public class GameAggregateTest {
                 .expectSuccessfulHandlerExecution()
                 .expectEvents(
                         new MoveMadeEvent(gameId, new Move(Rook.black(), "d8", "d1")),
-                        new GameEndedEvent(gameId, EndGameCommand.EndingReason.BLACK_WON, List.of(
+                        new GameEndedEvent(gameId, List.of(
                                 new Move(Rook.black(), "d8", "d1")
-                        ))
+                        ), EndGameCommand.EndingReason.BLACK_WON)
                 );
     }
 }

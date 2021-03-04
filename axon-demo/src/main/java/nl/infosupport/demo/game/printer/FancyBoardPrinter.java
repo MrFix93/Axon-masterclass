@@ -32,7 +32,6 @@ import java.util.*;
  */
 public class FancyBoardPrinter implements ConsoleBoardPrinter {
 
-
     private static final String TOPP_LINE = "╔═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╗┈╮\n";
     private static final String SEPARATOR = "╟───┼───┼───┼───┼───┼───┼───┼───╢ ┊\n";
     private static final String BOTT_LINE = "╚═══╧═══╧═══╧═══╧═══╧═══╧═══╧═══╝ ┊\n";
@@ -50,6 +49,14 @@ public class FancyBoardPrinter implements ConsoleBoardPrinter {
 
     @Override
     public void print(Board board) {
+        final String boardString = getRawString(board);
+
+        PrintWriter printWriter = new PrintWriter(printStream, true, StandardCharsets.UTF_8);
+        printWriter.println(boardString);
+    }
+
+    @Override
+    public String getRawString(Board board) {
         StringBuilder stringBuilder = new StringBuilder();
         final List<Rank> ranks = new ArrayList<>(List.of(Rank.one, Rank.two, Rank.three, Rank.four, Rank.five, Rank.six, Rank.seven, Rank.eight));
         Collections.sort(ranks);
@@ -72,10 +79,7 @@ public class FancyBoardPrinter implements ConsoleBoardPrinter {
         }
         stringBuilder.append(String.format(FILES_FORMAT, stringValues.toArray()));
 
-        final String boardString = stringBuilder.toString();
-
-        PrintWriter printWriter = new PrintWriter(printStream, true, StandardCharsets.UTF_8);
-        printWriter.println(boardString);
+        return stringBuilder.toString();
     }
 
     private String print(Rank rank, Board board) {
@@ -84,7 +88,7 @@ public class FancyBoardPrinter implements ConsoleBoardPrinter {
         final List<String> stringValues = new ArrayList<>();
         for (File file : files) {
             Square square = new Square(file, rank);
-            Optional<Piece> piece = board.getKingOfColor(square);
+            Optional<Piece> piece = board.getPieceBySquare(square);
             if (piece.isPresent()) {
                 stringValues.add(fromCodetoString(piecePrinter.print(piece.get())));
             } else {

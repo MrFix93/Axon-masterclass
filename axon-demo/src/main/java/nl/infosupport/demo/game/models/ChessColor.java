@@ -4,7 +4,7 @@ public enum ChessColor {
     WHITE,
     BLACK;
 
-    ChessColor invert() {
+    public ChessColor invert() {
         return ChessColor.values()[(this.ordinal() + 1) % 2];
     }
 }

@@ -9,6 +9,7 @@ import nl.infosupport.demo.game.models.pieces.Bishop;
 import nl.infosupport.demo.game.models.pieces.King;
 import nl.infosupport.demo.game.models.pieces.Pawn;
 import nl.infosupport.demo.game.models.pieces.Queen;
+import nl.infosupport.demo.game.models.rules.CheckMateRule;
 import nl.infosupport.demo.game.printer.ConsoleBoardPrinter;
 import nl.infosupport.demo.game.printer.FancyBoardPrinter;
 import org.junit.jupiter.api.Assertions;
@@ -38,7 +39,8 @@ class GameEntityTest {
 
         Assertions.assertDoesNotThrow(() -> {
                     for (Move m : scholarsMateMoves) {
-                        m.makeAndCommit(board);
+                        board.make(m);
+                        board.commit(m);
                         printer.print(board);
                     }
                 }
@@ -50,11 +52,12 @@ class GameEntityTest {
         final Board board = BoardCreator.fullBoard();
 
         for (Move m : scholarsMateMoves) {
-            m.makeAndCommit(board);
+            board.make(m);
+            board.commit(m);
         }
 
         Assertions.assertThrows(IllegalChessMoveException.class, () ->
-                new Move(King.black(), "e8", "f7").make(board)
+                board.make(new Move(King.black(), "e8", "f7"))
         );
     }
 
@@ -63,11 +66,12 @@ class GameEntityTest {
         final Board board = BoardCreator.fullBoard();
 
         for (Move m : scholarsMateMoves) {
-            m.makeAndCommit(board);
+            board.make(m);
+            board.commit(m);
         }
 
         Assertions.assertThrows(IllegalChessMoveException.class, () ->
-                new Move(King.black(), "e8", "e7").make(board)
+                board.make(new Move(King.black(), "e8", "e7"))
         );
     }
 
@@ -76,9 +80,10 @@ class GameEntityTest {
         final Board board = BoardCreator.fullBoard();
 
         for (Move m : scholarsMateMoves) {
-            m.makeAndCommit(board);
+            board.make(m);
+            board.commit(m);
         }
 
-        assertThat(board.isCheckMate(ChessColor.BLACK)).isTrue();
+        assertThat(CheckMateRule.isCheckMate(board, ChessColor.BLACK)).isTrue();
     }
 }
