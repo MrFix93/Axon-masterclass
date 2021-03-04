@@ -1,13 +1,16 @@
 package nl.infosupport.demo.users.query.readmodels;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@Entity
 public class User {
 
     @Id

@@ -23,7 +23,7 @@ public class UserCommandController {
         this.userCommandService = userCommandService;
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<Void> registerUser(@Valid @RequestBody User user) {
 
         userCommandService.registerUser(user);
