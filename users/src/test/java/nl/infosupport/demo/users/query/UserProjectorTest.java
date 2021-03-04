@@ -16,7 +16,6 @@ import static org.mockito.Mockito.times;
 @SpringBootTest
 class UserProjectorTest {
 
-
     @MockBean
     private UserViewService userViewService;
     @Autowired
@@ -40,6 +39,5 @@ class UserProjectorTest {
         assertThat(savedUser.getName()).isEqualTo(userRegisteredEvent.getUser().getName());
         assertThat(savedUser.getCountry()).isEqualTo(userRegisteredEvent.getUser().getCountry());
         assertThat(savedUser.getBiography()).isEqualTo(userRegisteredEvent.getUser().getShortBio());
-
     }
 }

@@ -5,8 +5,8 @@ import nl.infosupport.demo.users.events.UserRegisteredEvent;
 import nl.infosupport.demo.users.command.exceptions.PolicyViolatedException;
 import nl.infosupport.demo.users.command.commandmodels.User;
 import org.axonframework.test.aggregate.AggregateTestFixture;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
@@ -14,7 +14,7 @@ public class UserAggregateTest {
 
     private AggregateTestFixture<UserAggregate> fixture;
 
-    @Before
+    @BeforeEach
     public void setup() {
         fixture = new AggregateTestFixture<>(UserAggregate.class);
     }

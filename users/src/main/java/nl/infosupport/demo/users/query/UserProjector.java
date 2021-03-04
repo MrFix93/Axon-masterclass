@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor(onConstructor_ = {@Autowired})
-@ProcessingGroup("storedEvents") //TODO: processinggroup zetten
 public class UserProjector {
 
     private final UserViewService userViewService;

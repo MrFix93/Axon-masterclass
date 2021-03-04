@@ -23,7 +23,7 @@ class UserQueryHandlerTest {
     private UserViewService userViewService;
 
     @Test
-    void testFindWerkvoorraadByVerlagingsverzoekIdQuery() {
+    void testFindAllUsers() {
         //Given
         final User user = new User("Test@email.com", "Test", "Netherlands", "Hello I am test");
         when(userViewService.findAll()).thenReturn(List.of(user));

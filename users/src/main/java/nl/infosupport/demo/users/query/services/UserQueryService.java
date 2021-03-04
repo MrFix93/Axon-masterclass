@@ -17,9 +17,9 @@ public class UserQueryService {
     private final QueryGateway queryGateway;
 
     /**
-     * Calls QueryGateway to find all WerkvoorraadItem
+     * Calls QueryGateway to find all Users
      *
-     * @return a list of WerkvoorraadItem
+     * @return a list of Users
      */
     public List<User> findAllUsers() throws ExecutionException, InterruptedException {
         return queryGateway.query("findAllUsers", null, ResponseTypes.multipleInstancesOf(User.class))
