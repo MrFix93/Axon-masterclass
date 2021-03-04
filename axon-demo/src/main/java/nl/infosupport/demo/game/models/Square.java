@@ -1,12 +1,8 @@
 package nl.infosupport.demo.game.models;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Value;
 
-@EqualsAndHashCode
-@Getter
-@ToString
+@Value
 public class Square {
     File file;
     Rank rank;
