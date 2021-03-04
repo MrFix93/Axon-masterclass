@@ -26,7 +26,7 @@ class UserQueryServiceTest {
     private UserQueryService userQueryService;
 
     @Test
-    void testFindRechtByRechtId() throws ExecutionException, InterruptedException {
+    void testFindAllUsers() throws ExecutionException, InterruptedException {
         //Arrange
         final User user = new User("Test@email.com", "Test", "Netherlands", "Hello I am test");
 
