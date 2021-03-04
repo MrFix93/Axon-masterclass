@@ -69,13 +69,14 @@ public class GameAggregate {
             throw new PolicyViolatedException("Cannot make move when game is not started");
         }
 
-        if ((movesMade.size() + 1) % 2 == 0 && command.getPiece().getColor() == firstMove) {
-            throw new PolicyViolatedException("It's BLACK's turn");
+        if ((movesMade.size() + 1) % 2 == 1 && command.getPlayer().getColor() == firstMove.invert()) {
+            throw new PolicyViolatedException("It's not your turn");
         }
 
-        if ((movesMade.size() + 1) % 2 == 1 && command.getPiece().getColor() == firstMove.invert()) {
-            throw new PolicyViolatedException("It's WHITE's turn");
+        if (command.getPlayer().getColor() != command.getPiece().getColor()) {
+            throw new PolicyViolatedException("You cannot move the pieces of your opponent");
         }
+
 
         final Move move = new Move(command.getPiece(), command.getStartPosition(), command.getEndPosition());
         try {

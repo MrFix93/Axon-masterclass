@@ -50,14 +50,17 @@ public class GameAggregateTest {
     public void testMakeMove() throws IllegalBoardSquareException {
         final String gameId = "gameId";
 
+        final Player peter = new Player("Peter", ChessColor.WHITE);
+        final Player raymond = new Player("Raymond", ChessColor.BLACK);
+
         final GameStartedEvent gameStartedEvent = new GameStartedEvent(gameId,
                 BoardCreator.fullBoard(),
                 GameState.STARTED,
-                new Player("Peter", ChessColor.WHITE),
-                new Player("Raymond", ChessColor.BLACK),
+                peter,
+                raymond,
                 ChessColor.WHITE);
 
-        final MakeMoveCommand moveCommand = new MakeMoveCommand(gameId, new Pawn(ChessColor.WHITE), Squares.from("a2"), Squares.from("a3"), false);
+        final MakeMoveCommand moveCommand = new MakeMoveCommand(gameId, new Pawn(ChessColor.WHITE), Squares.from("a2"), Squares.from("a3"), false, peter);
 
         fixture.given(gameStartedEvent)
                 .when(moveCommand)
@@ -66,19 +69,66 @@ public class GameAggregateTest {
     }
 
     @Test
-    public void testMakeMove_sequential() throws IllegalBoardSquareException {
+    public void testUnableToMakeMove_withOpponentPieces() throws IllegalBoardSquareException {
         final String gameId = "gameId";
+
+        final Player peter = new Player("Peter", ChessColor.WHITE);
+        final Player raymond = new Player("Raymond", ChessColor.BLACK);
 
         final GameStartedEvent gameStartedEvent = new GameStartedEvent(gameId,
                 BoardCreator.fullBoard(),
                 GameState.STARTED,
-                new Player("Peter", ChessColor.WHITE),
-                new Player("Raymond", ChessColor.BLACK),
+                peter,
+                raymond,
+                ChessColor.WHITE);
+
+        final MakeMoveCommand moveCommand = new MakeMoveCommand(gameId, new Pawn(ChessColor.WHITE), Squares.from("a2"), Squares.from("a3"), false, raymond);
+
+        fixture.given(gameStartedEvent)
+                .when(moveCommand)
+                .expectExceptionMessage("You cannot move the pieces of your opponent")
+                .expectNoEvents();
+    }
+
+    @Test
+    public void testUnableToMakeMove_notInTurnWhite() throws IllegalBoardSquareException {
+        final String gameId = "gameId";
+
+        final Player peter = new Player("Peter", ChessColor.WHITE);
+        final Player raymond = new Player("Raymond", ChessColor.BLACK);
+
+        final GameStartedEvent gameStartedEvent = new GameStartedEvent(gameId,
+                BoardCreator.fullBoard(),
+                GameState.STARTED,
+                peter,
+                raymond,
+                ChessColor.BLACK);
+
+        final MakeMoveCommand moveCommand = new MakeMoveCommand(gameId, new Pawn(ChessColor.WHITE), Squares.from("a2"), Squares.from("a3"), false, peter);
+
+        fixture.given(gameStartedEvent)
+                .when(moveCommand)
+                .expectExceptionMessage("It's not your turn")
+                .expectNoEvents();
+    }
+
+    @Test
+    public void testMakeMove_sequential() throws IllegalBoardSquareException {
+        final String gameId = "gameId";
+
+        final Player peter = new Player("Peter", ChessColor.WHITE);
+        final Player raymond = new Player("Raymond", ChessColor.BLACK);
+
+        final GameStartedEvent gameStartedEvent = new GameStartedEvent(gameId,
+                BoardCreator.fullBoard(),
+                GameState.STARTED,
+                peter,
+                raymond,
                 ChessColor.WHITE);
 
         final MoveMadeEvent a3 = new MoveMadeEvent(gameId, new Move(new Pawn(ChessColor.WHITE), "a2", "a3"));
         final MoveMadeEvent a7 = new MoveMadeEvent(gameId, new Move(new Pawn(ChessColor.BLACK), Squares.from("a7"), Squares.from("a6")));
-        final MakeMoveCommand a4 = new MakeMoveCommand(gameId, new Pawn(ChessColor.WHITE), Squares.from("a3"), Squares.from("a4"), false);
+        final MakeMoveCommand a4 = new MakeMoveCommand(gameId, new Pawn(ChessColor.WHITE), Squares.from("a3"), Squares.from("a4"), false, peter);
 
         fixture.given(gameStartedEvent, a3, a7)
                 .when(a4)
@@ -90,14 +140,17 @@ public class GameAggregateTest {
     public void testMakeMove_sequential_differentPieces() throws IllegalBoardSquareException {
         final String gameId = "gameId";
 
+        final Player peter = new Player("Peter", ChessColor.WHITE);
+        final Player raymond = new Player("Raymond", ChessColor.BLACK);
+
         final GameStartedEvent gameStartedEvent = new GameStartedEvent(gameId,
                 BoardCreator.fullBoard(),
                 GameState.STARTED,
-                new Player("Peter", ChessColor.WHITE),
-                new Player("Raymond", ChessColor.BLACK),
+                peter,
+                raymond,
                 ChessColor.WHITE);
 
-        final MakeMoveCommand a4 = new MakeMoveCommand(gameId, new Pawn(ChessColor.WHITE), Squares.from("a3"), Squares.from("a4"), false);
+        final MakeMoveCommand a4 = new MakeMoveCommand(gameId, new Pawn(ChessColor.WHITE), Squares.from("a3"), Squares.from("a4"), false, peter);
         final MoveMadeEvent a7 = new MoveMadeEvent(gameId, new Move(new Pawn(ChessColor.BLACK), Squares.from("a7"), Squares.from("a6")));
         final MoveMadeEvent a3 = new MoveMadeEvent(gameId, new Move(new Pawn(ChessColor.WHITE), "a2", "a3"));
 
@@ -110,7 +163,7 @@ public class GameAggregateTest {
     @Test
     public void testMakeMove_checkMate() throws IllegalBoardSquareException {
         final String gameId = "gameId";
-        final Player blackPlayer = new Player("Raymond", ChessColor.BLACK);
+        final Player raymond = new Player("Raymond", ChessColor.BLACK);
 
         final GameStartedEvent gameStartedEvent = new GameStartedEvent(gameId,
                 new BoardCreator.Builder()
@@ -120,10 +173,10 @@ public class GameAggregateTest {
                         .build(),
                 GameState.STARTED,
                 new Player("Peter", ChessColor.WHITE),
-                blackPlayer,
+                raymond,
                 ChessColor.BLACK);
 
-        final MakeMoveCommand rd1 = new MakeMoveCommand(gameId, Rook.black(), Squares.from("d8"), Squares.from("d1"), false);
+        final MakeMoveCommand rd1 = new MakeMoveCommand(gameId, Rook.black(), Squares.from("d8"), Squares.from("d1"), false, raymond);
 
         fixture.given(gameStartedEvent)
                 .when(rd1)
@@ -132,7 +185,7 @@ public class GameAggregateTest {
                         new MoveMadeEvent(gameId, new Move(Rook.black(), "d8", "d1")),
                         new GameEndedEvent(gameId, List.of(
                                 new Move(Rook.black(), "d8", "d1")
-                        ), EndGameCommand.EndingReason.BLACK_WON, blackPlayer)
+                        ), EndGameCommand.EndingReason.BLACK_WON, raymond)
                 );
     }
 }
