@@ -7,11 +7,6 @@ public class Square {
     File file;
     Rank rank;
 
-    public Square(Rank rank, File file) {
-        this.file = file;
-        this.rank = rank;
-    }
-
     public Square(File file, Rank rank) {
         this.file = file;
         this.rank = rank;

@@ -69,14 +69,13 @@ public class GameAggregate {
             throw new PolicyViolatedException("Cannot make move when game is not started");
         }
 
-        if ((movesMade.size() + 1) % 2 == 1 && command.getPlayer().getColor() == firstMove.invert()) {
+        if (!inTurn(command.getPlayer().getColor())) {
             throw new PolicyViolatedException("It's not your turn");
         }
 
         if (command.getPlayer().getColor() != command.getPiece().getColor()) {
             throw new PolicyViolatedException("You cannot move the pieces of your opponent");
         }
-
 
         final Move move = new Move(command.getPiece(), command.getStartPosition(), command.getEndPosition());
         try {
@@ -94,6 +93,10 @@ public class GameAggregate {
         if (CheckMateRule.isCheckMate(board, ChessColor.BLACK)) {
             apply(new GameEndedEvent(id, movesMade, EndGameCommand.EndingReason.WHITE_WON, whitePlayer));
         }
+    }
+
+    private boolean inTurn(ChessColor color) {
+        return !((movesMade.size() + 1) % 2 == 1 && color == firstMove.invert());
     }
 
     @EventSourcingHandler

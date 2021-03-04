@@ -73,7 +73,7 @@ public class Path {
             }
         }
 
-        return Streams.zip(workRanks.stream(), workFiles.stream(), Square::new).collect(Collectors.toList());
+        return Streams.zip(workFiles.stream(), workRanks.stream(), Square::new).collect(Collectors.toList());
     }
 
     private static Rank mapToRank(int intRank) {
