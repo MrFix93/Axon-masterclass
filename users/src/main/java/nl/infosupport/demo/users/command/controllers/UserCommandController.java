@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/users")
@@ -24,9 +25,9 @@ public class UserCommandController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Void> registerUser(@Valid @RequestBody User user) {
+    public ResponseEntity<Void> registerUser(@Valid @RequestBody User user) throws ExecutionException, InterruptedException {
 
-        userCommandService.registerUser(user);
+        userCommandService.registerUser(user).get();
 
         return ResponseEntity.accepted().location(URI.create("/users")).build();
     }

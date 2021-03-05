@@ -22,14 +22,14 @@ public class InviteCommandController {
 
     @PostMapping("")
     public ResponseEntity<Void> invite(@RequestBody Invite invite) throws ExecutionException, InterruptedException {
-        matchMakerCommandService.invite(invite.getPlayer1(), invite.getPlayer2());
+        matchMakerCommandService.invite(invite.getPlayer1(), invite.getPlayer2()).get();
 
         return ResponseEntity.accepted().location(URI.create("/invites")).build();
     }
 
     @PatchMapping("")
-    public ResponseEntity<Void> updateInvite(@RequestBody nl.infosupport.demo.matchmaker.command.commandmodels.Invite invite) {
-        matchMakerCommandService.acceptDecline(invite.getPlayer1(), invite.getPlayer2(), invite.getStatus());
+    public ResponseEntity<Void> updateInvite(@RequestBody nl.infosupport.demo.matchmaker.command.commandmodels.Invite invite) throws ExecutionException, InterruptedException {
+        matchMakerCommandService.acceptDecline(invite.getPlayer1(), invite.getPlayer2(), invite.getStatus()).get();
 
         return ResponseEntity.accepted().location(URI.create("/invites")).build();
     }
