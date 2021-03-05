@@ -22,7 +22,7 @@ public class UserQueryController {
     }
 
     @GetMapping("")
-    public List<User> getWerkvoorraad() throws ExecutionException, InterruptedException {
+    public List<User> getUsers() throws ExecutionException, InterruptedException {
         return userQueryService.findAllUsers();
     }
 }
