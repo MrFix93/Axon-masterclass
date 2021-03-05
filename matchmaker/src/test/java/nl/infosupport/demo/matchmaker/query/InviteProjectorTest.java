@@ -48,7 +48,7 @@ class InviteProjectorTest {
     @Test
     void testInviteAcceptedDeclinedEvent() {
         //Given
-        final Invite invite = new Invite("id", "player1", "player2", "PENDING");
+        final Invite invite = new Invite("player1", "player2", "PENDING");
         when(inviteViewService.findByPlayer1AndPlayer2AndStatus(anyString(), anyString(), anyString())).thenReturn(invite);
         final ArgumentCaptor<Invite> captor = ArgumentCaptor.forClass(Invite.class);
 

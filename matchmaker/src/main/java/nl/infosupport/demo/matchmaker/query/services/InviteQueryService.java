@@ -21,7 +21,7 @@ public class InviteQueryService {
      *
      * @return a list of Invites
      */
-    public List<Invite> findAllUsers() throws ExecutionException, InterruptedException {
+    public List<Invite> findAllInvites() throws ExecutionException, InterruptedException {
         return queryGateway.query("findAllInvites", null, ResponseTypes.multipleInstancesOf(Invite.class))
                 .get();
     }

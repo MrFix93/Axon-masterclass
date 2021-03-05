@@ -6,7 +6,6 @@ import nl.infosupport.demo.matchmaker.events.InviteSentEvent;
 import nl.infosupport.demo.matchmaker.query.readmodels.Invite;
 import nl.infosupport.demo.matchmaker.query.services.InviteViewService;
 import org.axonframework.eventhandling.EventHandler;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +18,7 @@ public class InviteProjector {
 
     @EventHandler
     public void handle(InviteSentEvent event) {
-        final String id = new ObjectId().toString();
-        final Invite invite = new Invite(id, event.getInvite().getPlayer1(), event.getInvite().getPlayer2(), event.getInvite().getStatus().name());
+        final Invite invite = new Invite(event.getInvite().getPlayer1(), event.getInvite().getPlayer2(), event.getInvite().getStatus().name());
 
         inviteViewService.createOrUpdate(invite);
     }

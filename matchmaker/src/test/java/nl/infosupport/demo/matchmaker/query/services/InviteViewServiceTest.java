@@ -25,7 +25,7 @@ class InviteViewServiceTest {
     @Test
     void testFindAll() {
         //Given
-        final Invite invite = new Invite("id", "player1", "player2", "PENDING");
+        final Invite invite = new Invite("player1", "player2", "PENDING");
         when(inviteRepository.findAll()).thenReturn(List.of(invite));
 
         //When
@@ -38,7 +38,7 @@ class InviteViewServiceTest {
     @Test
     void testCreateOrUpdate() {
         //Given
-        final Invite invite = new Invite("id", "player1", "player2", "PENDING");
+        final Invite invite = new Invite("player1", "player2", "PENDING");
 
         //When
         inviteViewService.createOrUpdate(invite);
@@ -50,7 +50,7 @@ class InviteViewServiceTest {
     @Test
     void testFindByPlayer1AndPlayer2AndStatus() {
         //Given
-        final Invite invite = new Invite("id", "player1", "player2", "PENDING");
+        final Invite invite = new Invite("player1", "player2", "PENDING");
         when(inviteRepository.findByPlayer1AndPlayer2AndStatus(anyString(), anyString(), anyString())).thenReturn(List.of(invite));
 
         //When

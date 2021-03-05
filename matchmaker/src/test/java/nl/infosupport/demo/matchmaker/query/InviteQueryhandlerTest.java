@@ -25,7 +25,7 @@ class InviteQueryhandlerTest {
     @Test
     void testFindAllInvites() {
         //Given
-        final Invite invite = new Invite("id", "Peter", "Raymond", "PENDING");
+        final Invite invite = new Invite("Peter", "Raymond", "PENDING");
         when(inviteViewService.findAll()).thenReturn(List.of(invite));
 
         //When

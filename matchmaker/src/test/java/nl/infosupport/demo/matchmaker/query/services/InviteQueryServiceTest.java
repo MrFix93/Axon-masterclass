@@ -30,13 +30,13 @@ class InviteQueryServiceTest {
     @Test
     void testFindAllInvites() throws ExecutionException, InterruptedException {
         //Arrange
-        final Invite invite = new Invite("id", "Peter", "Raymond", "PENDING");
+        final Invite invite = new Invite("Peter", "Raymond", "PENDING");
 
         when(queryGateway.query(anyString(), isNull(), any(ResponseType.class)))
                 .thenReturn(CompletableFuture.completedFuture(Collections.singletonList(invite)));
 
         //Act
-        final List<Invite> users = inviteQueryService.findAllUsers();
+        final List<Invite> users = inviteQueryService.findAllInvites();
 
         //Assert
         assertThat(users).isNotNull().isNotEmpty().hasSize(1);
