@@ -1,47 +1,17 @@
 package nl.infosupport.demo.game.models;
 
-import com.google.common.collect.Streams;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import nl.infosupport.demo.game.exceptions.IllegalChessMoveException;
+import lombok.Value;
+import nl.infosupport.demo.game.utils.Path;
+import nl.infosupport.demo.game.utils.Squares;
 
-import java.util.EnumSet;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-@Getter
-@EqualsAndHashCode
+@Value
 public class Move {
-    private final Piece piece;
-    private final Square startSquare;
-    private final Square endSquare;
-    private final MoveType moveType;
-
-    public void make(Board board) throws IllegalChessMoveException {
-        if (!board.pieceIsAtSquare(startSquare, piece)) {
-            throw new IllegalChessMoveException("Piece cannot make this move", this);
-        }
-
-        if (board.targetSquareIsOccupiedByTheSameColor(endSquare, getMoveColor())) {
-            throw new IllegalChessMoveException("Target square is occupied by piece of the same color", this);
-        }
-
-        if (!piece.isAbleToMake(this)) {
-            throw new IllegalChessMoveException("Piece cannot make move", this);
-        }
-
-        if (!piece.canJumpOverPiece() && isObstructedMove(board)) {
-            throw new IllegalChessMoveException("Path is obstructed", this);
-        }
-
-        board.updateBoard(this);
-
-        if (board.isCheck(piece.getColor())) {
-            throw new IllegalChessMoveException("Unable to make move because you are check", this);
-        }
-    }
+    Piece piece;
+    Square startSquare;
+    Square endSquare;
 
     public enum MoveType {
         CAPTURE,
@@ -52,36 +22,24 @@ public class Move {
         this.piece = piece;
         this.startSquare = startSquare;
         this.endSquare = endSquare;
-        this.moveType = MoveType.NORMAL;
     }
 
-    public Move(Piece piece, Square startSquare, Square endSquare, MoveType moveType) {
-        this.piece = piece;
-        this.startSquare = startSquare;
-        this.endSquare = endSquare;
-        this.moveType = moveType;
-    }
-
-    public ChessColor getMoveColor() {
-        return piece.getColor();
-    }
-
-    public boolean isObstructedMove(Board board) {
-        Stream<Integer> ranks = IntStream.rangeClosed(startSquare.rank, endSquare.rank)
-                .boxed();
-        Stream<File> files = EnumSet.range(startSquare.file, endSquare.file)
-                .stream().sorted();
-
-        final List<Square> travelingPath = Streams.zip(files, ranks, Square::new)
-                .collect(Collectors.toList());
-
-        for (Square square : travelingPath) {
-            final Piece pieceAtSquare = board.tilePieceMap.get(square);
-            if (pieceAtSquare != null) {
-                return false;
-            }
+    public Move(Piece piece, String... patterns) {
+        final List<Square> squares = Squares.asList(patterns);
+        if (squares.size() != 2) {
+            throw new IllegalArgumentException("Unable to instantiate move from patterns " + Arrays.toString(patterns));
         }
 
-        return true;
+        this.piece = piece;
+        this.startSquare = squares.get(0);
+        this.endSquare = squares.get(1);
+    }
+
+    public List<Square> getPath() {
+        final List<Square> travelingPath = Path.constructFrom(this);
+        travelingPath.remove(this.getStartSquare());
+        travelingPath.remove(this.getEndSquare());
+
+        return travelingPath;
     }
 }
