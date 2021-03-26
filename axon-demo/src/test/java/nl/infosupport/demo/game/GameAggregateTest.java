@@ -12,7 +12,7 @@ import nl.infosupport.demo.game.models.pieces.King;
 import nl.infosupport.demo.game.models.pieces.Pawn;
 import nl.infosupport.demo.game.models.pieces.Queen;
 import nl.infosupport.demo.game.models.pieces.Rook;
-import nl.infosupport.demo.game.utils.Squares;
+import nl.infosupport.demo.game.models.utils.Squares;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.junit.Before;
 import org.junit.Test;

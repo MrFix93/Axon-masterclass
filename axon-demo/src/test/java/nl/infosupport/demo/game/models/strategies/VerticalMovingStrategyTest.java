@@ -1,7 +1,7 @@
 package nl.infosupport.demo.game.models.strategies;
 
 import nl.infosupport.demo.game.models.Square;
-import nl.infosupport.demo.game.utils.Squares;
+import nl.infosupport.demo.game.models.utils.Squares;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

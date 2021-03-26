@@ -1,13 +1,8 @@
 package nl.infosupport.demo.game;
 
-import nl.infosupport.demo.game.commands.EndGameCommand;
 import nl.infosupport.demo.game.commands.MakeMoveCommand;
 import nl.infosupport.demo.game.commands.StartGameCommand;
-import nl.infosupport.demo.game.events.GameEndedEvent;
 import nl.infosupport.demo.game.events.GameStartedEvent;
-import nl.infosupport.demo.game.events.MoveMadeEvent;
-import nl.infosupport.demo.game.exceptions.IllegalChessMoveException;
-import nl.infosupport.demo.game.exceptions.PolicyViolatedException;
 import nl.infosupport.demo.game.models.*;
 import nl.infosupport.demo.game.models.rules.*;
 import nl.infosupport.demo.game.printer.ConsoleBoardPrinter;
@@ -22,7 +17,6 @@ import org.axonframework.spring.stereotype.Aggregate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nl.infosupport.demo.game.models.GameState.FINISHED;
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
 @Aggregate
@@ -46,7 +40,7 @@ public class GameAggregate {
 
     private Player whitePlayer;
     private Player blackPlayer;
-    private List<Move> movesMade;
+    private List<Move> movesMade = new ArrayList<>();
 
     private ChessColor firstMove;
 
@@ -64,35 +58,15 @@ public class GameAggregate {
     }
 
     @CommandHandler
-    public void handle(MakeMoveCommand command) throws PolicyViolatedException {
-        if (gameState != GameState.STARTED) {
-            throw new PolicyViolatedException("Cannot make move when game is not started");
-        }
-
-        if (!inTurn(command.getPlayer().getColor())) {
-            throw new PolicyViolatedException("It's not your turn");
-        }
-
-        if (command.getPlayer().getColor() != command.getPiece().getColor()) {
-            throw new PolicyViolatedException("You cannot move the pieces of your opponent");
-        }
-
-        final Move move = new Move(command.getPiece(), command.getStartPosition(), command.getEndPosition());
-        try {
-            board.make(move);
-        } catch (IllegalChessMoveException e) {
-            throw new PolicyViolatedException("Unable to make move", e);
-        }
-
-        apply(new MoveMadeEvent(id, move));
-
-        if (CheckMateRule.isCheckMate(board, ChessColor.WHITE)) {
-            apply(new GameEndedEvent(id, movesMade, EndGameCommand.EndingReason.BLACK_WON, blackPlayer));
-        }
-
-        if (CheckMateRule.isCheckMate(board, ChessColor.BLACK)) {
-            apply(new GameEndedEvent(id, movesMade, EndGameCommand.EndingReason.WHITE_WON, whitePlayer));
-        }
+    public void handle(MakeMoveCommand command) {
+        /**
+         * 1. Game moet in juiste staat zijn
+         * 2. Speler die de move maakt moet aan de beurt zijn
+         * 3. Spelers kunnen alleen stukken gebruiken van hun eigen kleur
+         * 4. De move moet valide zijn
+         * 5. De move moet gemaakt worden
+         * 6. Check  of het schaakmat is, zo ja, beëindig de game
+         */
     }
 
     private boolean inTurn(ChessColor color) {
@@ -101,29 +75,9 @@ public class GameAggregate {
 
     @EventSourcingHandler
     public void handle(GameStartedEvent event) {
-        id = event.getId();
-        board = event.getBoard();
-        gameState = event.getGameState();
-        whitePlayer = event.getWhitePlayer();
-        blackPlayer = event.getBlackPlayer();
-        firstMove = event.getFirstMove();
-
-        movesMade = new ArrayList<>();
-
+        /**
+         * Vul de instance variabelen met data uit het event
+         */
         printer.print(board);
-    }
-
-    @EventSourcingHandler
-    public void handle(MoveMadeEvent event) {
-        final Move move = event.getMove();
-        board.commit(move);
-        movesMade.add(event.getMove());
-
-        printer.print(board);
-    }
-
-    @EventSourcingHandler
-    public void handle(GameEndedEvent event) {
-        gameState = FINISHED;
     }
 }
