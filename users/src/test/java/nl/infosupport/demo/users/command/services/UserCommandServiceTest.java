@@ -10,6 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
+
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -26,7 +29,7 @@ class UserCommandServiceTest {
     void testRegisterUser() {
         //Given
         final User user = new User("Raymond", "test@email.com", "Netherlands", "Hello");
-        final RegisterUserCommand registerUserCommand = new RegisterUserCommand(user.getEmail(), user);
+        final RegisterUserCommand registerUserCommand = new RegisterUserCommand(UUID.nameUUIDFromBytes(user.getEmail().getBytes(StandardCharsets.UTF_8)).toString(), user);
         //When
         userCommandService.registerUser(user);
 

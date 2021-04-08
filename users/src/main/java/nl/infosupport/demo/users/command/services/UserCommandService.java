@@ -8,6 +8,7 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -18,7 +19,7 @@ public class UserCommandService {
     private final CommandGateway commandGateway;
 
     public CompletableFuture<String> registerUser(User user) {
-        final String id = UUID.fromString(user.getEmail()).toString();
+        final String id = UUID.nameUUIDFromBytes(user.getEmail().getBytes(StandardCharsets.UTF_8)).toString();
         final RegisterUserCommand registerUserCommand = new RegisterUserCommand(id, user);
 
         return commandGateway.send(registerUserCommand);
