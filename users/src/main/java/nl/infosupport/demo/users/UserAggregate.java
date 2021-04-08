@@ -16,6 +16,7 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 public class UserAggregate {
 
     @AggregateIdentifier
+    private String id;
     private String email;
     private String name;
     private String country;
