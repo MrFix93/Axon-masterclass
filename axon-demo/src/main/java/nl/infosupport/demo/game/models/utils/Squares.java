@@ -1,4 +1,4 @@
-package nl.infosupport.demo.game.utils;
+package nl.infosupport.demo.game.models.utils;
 
 import nl.infosupport.demo.game.models.File;
 import nl.infosupport.demo.game.models.Rank;

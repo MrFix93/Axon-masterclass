@@ -1,4 +1,4 @@
-package nl.infosupport.demo.game.utils;
+package nl.infosupport.demo.game.models.utils;
 
 import nl.infosupport.demo.game.models.Move;
 import nl.infosupport.demo.game.models.Piece;
