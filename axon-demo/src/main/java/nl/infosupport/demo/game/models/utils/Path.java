@@ -1,4 +1,4 @@
-package nl.infosupport.demo.game.utils;
+package nl.infosupport.demo.game.models.utils;
 
 import com.google.common.collect.Streams;
 import nl.infosupport.demo.game.exceptions.IllegalBoardSquareException;

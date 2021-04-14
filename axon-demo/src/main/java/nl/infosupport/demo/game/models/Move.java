@@ -1,8 +1,8 @@
 package nl.infosupport.demo.game.models;
 
 import lombok.Value;
-import nl.infosupport.demo.game.utils.Path;
-import nl.infosupport.demo.game.utils.Squares;
+import nl.infosupport.demo.game.models.utils.Path;
+import nl.infosupport.demo.game.models.utils.Squares;
 
 import java.util.Arrays;
 import java.util.List;
