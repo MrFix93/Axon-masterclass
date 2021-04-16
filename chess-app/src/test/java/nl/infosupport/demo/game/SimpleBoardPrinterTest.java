@@ -1,9 +1,9 @@
 package nl.infosupport.demo.game;
 
-import nl.infosupport.demo.game.models.Board;
-import nl.infosupport.demo.game.models.BoardCreator;
-import nl.infosupport.demo.game.printer.ConsoleBoardPrinter;
-import nl.infosupport.demo.game.printer.FancyBoardPrinter;
+import nl.infosupport.demo.game.command.models.Board;
+import nl.infosupport.demo.game.command.models.BoardCreator;
+import nl.infosupport.demo.game.command.printer.ConsoleBoardPrinter;
+import nl.infosupport.demo.game.command.printer.FancyBoardPrinter;
 import org.junit.jupiter.api.Test;
 
 class SimpleBoardPrinterTest {

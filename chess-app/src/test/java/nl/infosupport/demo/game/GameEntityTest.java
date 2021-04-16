@@ -1,17 +1,17 @@
 package nl.infosupport.demo.game;
 
-import nl.infosupport.demo.game.exceptions.IllegalChessMoveException;
-import nl.infosupport.demo.game.models.Board;
-import nl.infosupport.demo.game.models.BoardCreator;
-import nl.infosupport.demo.game.models.ChessColor;
-import nl.infosupport.demo.game.models.Move;
-import nl.infosupport.demo.game.models.pieces.Bishop;
-import nl.infosupport.demo.game.models.pieces.King;
-import nl.infosupport.demo.game.models.pieces.Pawn;
-import nl.infosupport.demo.game.models.pieces.Queen;
-import nl.infosupport.demo.game.models.rules.CheckMateRule;
-import nl.infosupport.demo.game.printer.ConsoleBoardPrinter;
-import nl.infosupport.demo.game.printer.FancyBoardPrinter;
+import nl.infosupport.demo.game.command.exceptions.IllegalChessMoveException;
+import nl.infosupport.demo.game.command.models.Board;
+import nl.infosupport.demo.game.command.models.BoardCreator;
+import nl.infosupport.demo.game.command.models.ChessColor;
+import nl.infosupport.demo.game.command.models.Move;
+import nl.infosupport.demo.game.command.models.pieces.Bishop;
+import nl.infosupport.demo.game.command.models.pieces.King;
+import nl.infosupport.demo.game.command.models.pieces.Pawn;
+import nl.infosupport.demo.game.command.models.pieces.Queen;
+import nl.infosupport.demo.game.command.models.rules.CheckMateRule;
+import nl.infosupport.demo.game.command.printer.ConsoleBoardPrinter;
+import nl.infosupport.demo.game.command.printer.FancyBoardPrinter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
