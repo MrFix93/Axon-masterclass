@@ -1,8 +1,8 @@
 package nl.infosupport.demo.game.models;
 
-import lombok.EqualsAndHashCode;
+import lombok.Value;
 
-@EqualsAndHashCode
+@Value
 public class Player {
     String name;
     ChessColor color;

@@ -16,6 +16,7 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 public class UserAggregate {
 
     @AggregateIdentifier
+    private String id;
     private String email;
     private String name;
     private String country;
@@ -35,7 +36,8 @@ public class UserAggregate {
 
     @EventSourcingHandler
     void handle(UserRegisteredEvent userRegisteredEvent) {
-        this.email = userRegisteredEvent.getId();
+        this.id = userRegisteredEvent.getId();
+        this.email = userRegisteredEvent.getUser().getEmail();
         this.name = userRegisteredEvent.getUser().getName();
         this.country = userRegisteredEvent.getUser().getCountry();
         this.shortBio = userRegisteredEvent.getUser().getShortBio();

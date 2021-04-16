@@ -1,68 +1,72 @@
 package nl.infosupport.demo.game.models;
 
 import lombok.EqualsAndHashCode;
+import nl.infosupport.demo.game.GameAggregate;
 import nl.infosupport.demo.game.exceptions.IllegalChessMoveException;
-import nl.infosupport.demo.game.models.pieces.King;
+import nl.infosupport.demo.game.models.rules.ChessMoveRule;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @EqualsAndHashCode
 public class Board {
-    Map<Square, Piece> tilePieceMap = new HashMap<>();
+    private final Map<Square, Piece> piecesOnSquare;
 
-    boolean pieceIsAtSquare(Square square, Piece piece) {
-        return tilePieceMap.containsKey(square) && tilePieceMap.get(square).equals(piece);
+    public Board(Map<Square, Piece> piecesOnSquare) {
+        this.piecesOnSquare = piecesOnSquare;
     }
 
-    public boolean isCheck(ChessColor color) {
-        final ChessColor oppositeColor = color.invert();
-        final King king = new King(oppositeColor);
+    public static Board copy(Board board) {
+        return new Board(new HashMap<>(board.piecesOnSquare));
+    }
 
-        final Map<Piece, Square> piecesFromOpponent = getPieceByColor(oppositeColor);
-        final Square kingSquare = piecesFromOpponent.get(king);
+    public void commit(Move move) {
+        piecesOnSquare.remove(move.getStartSquare());
+        piecesOnSquare.put(move.getEndSquare(), move.getPiece());
+    }
 
-        if(kingSquare == null) {
-            return false;
+    public void make(Move move) throws IllegalChessMoveException {
+        for (ChessMoveRule rule : GameAggregate.getGameRules()) {
+            final boolean moveAdheresRule = rule.isValid(move, this);
+            if (!moveAdheresRule) {
+                throw new IllegalChessMoveException(rule.getFailureReason(), move, this);
+            }
         }
-
-        final List<Move> availableMoves = piecesFromOpponent.entrySet()
-                .stream()
-                .map(position -> new Move(position.getKey(), position.getValue(), kingSquare))
-                .filter(move -> {
-                    try {
-                        move.make(this);
-                    } catch (IllegalChessMoveException e) {
-                        return false;
-                    }
-                    return true;
-                }).collect(Collectors.toList());
-
-        return !availableMoves.isEmpty();
     }
 
-    public void updateBoard(Move move) {
-        tilePieceMap.remove(move.getStartSquare());
-        tilePieceMap.put(move.getEndSquare(), move.getPiece());
+    public boolean isValidMove(Move move) {
+        return GameAggregate.getGameRules()
+                .stream()
+                .allMatch(rule -> rule.isValid(move, this));
     }
 
-    public Map<Piece, Square> getPieceByColor(ChessColor color) {
-        return tilePieceMap.entrySet()
-                .stream()
+    public Move.MoveType getMoveType(Move move) {
+        final Optional<Piece> pieceBySquare = getPieceBySquare(move.getEndSquare());
+        if (pieceBySquare.isPresent() && pieceBySquare.get().getColor() == move.getPiece().getColor().invert()) {
+            return Move.MoveType.CAPTURE;
+        }
+        return Move.MoveType.NORMAL;
+    }
+
+    public Optional<Square> getPieceByTypeAndColor(ChessColor color, Class<? extends Piece> pieceType) {
+        return getPieceByColor(color).entrySet().stream()
+                .filter(entry -> entry.getValue().getClass() == pieceType)
+                .map(Map.Entry::getKey)
+                .findFirst();
+    }
+
+    public Optional<Piece> getPieceBySquare(Square square) {
+        return piecesOnSquare.entrySet().stream()
+                .filter(position -> position.getKey().equals(square))
+                .map(Map.Entry::getValue)
+                .findFirst();
+    }
+
+    public Map<Square, Piece> getPieceByColor(ChessColor color) {
+        return piecesOnSquare.entrySet().stream()
                 .filter(position -> position.getValue().getColor().equals(color))
-                .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
-    }
-
-    public Optional<Piece> getPiece(Square square) {
-        final boolean containsAPiece = tilePieceMap.containsKey(square);
-        return containsAPiece ? Optional.of(tilePieceMap.get(square)) : Optional.empty();
-    }
-
-    boolean targetSquareIsOccupiedByTheSameColor(Square square, ChessColor color) {
-        final Optional<Piece> pieceAtTargetSquare = this.getPiece(square);
-        return pieceAtTargetSquare.isPresent() && pieceAtTargetSquare.get().getColor() == color;
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

@@ -1,6 +1,8 @@
 package nl.infosupport.demo.matchmaker.query.readmodels;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +15,7 @@ public class Invite {
 
     @Id
     @GeneratedValue
-    String id;
+    Long id;
     String player1;
     String player2;
 

@@ -32,7 +32,6 @@ public class MatchMakerAggregate {
     @CommandHandler
     @CreationPolicy(AggregateCreationPolicy.CREATE_IF_MISSING)
     public void handle(AddUserCommand addUserCommand) {
-        System.out.println("add user command");
         final UserAddedEvent userAddedEvent = new UserAddedEvent(addUserCommand.getId(), addUserCommand.getUser());
 
         apply(userAddedEvent);
@@ -40,7 +39,6 @@ public class MatchMakerAggregate {
 
     @CommandHandler
     public void handle(SendInviteCommand sendInviteCommand) throws PolicyViolatedException {
-        System.out.println("send invite command");
         final String player1 = users.get(sendInviteCommand.getPlayer1());
         final String player2 = users.get(sendInviteCommand.getPlayer2());
 
@@ -60,7 +58,6 @@ public class MatchMakerAggregate {
 
     @CommandHandler
     public void handle(AcceptDeclineInviteCommand acceptDeclineInviteCommand) throws PolicyViolatedException {
-        System.out.println("accept decline command");
         final Optional<Invite> optionalOpenInvite = invites.stream()
                 .filter(invite -> isOpenInvite(invite, acceptDeclineInviteCommand.getPlayer1(), acceptDeclineInviteCommand.getPlayer2()))
                 .findFirst();

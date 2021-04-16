@@ -9,6 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
+
 @SpringBootTest
 public class UserAggregateTest {
 
@@ -24,10 +27,10 @@ public class UserAggregateTest {
         final User user = new User("Test", "test@mail.com", "Netherlands", "Hello");
 
         fixture.givenNoPriorActivity()
-                .when(new RegisterUserCommand("test@mail.com", user))
+                .when(new RegisterUserCommand(UUID.nameUUIDFromBytes(user.getEmail().getBytes(StandardCharsets.UTF_8)).toString(), user))
                 .expectSuccessfulHandlerExecution()
                 .expectEvents(
-                        new UserRegisteredEvent("test@mail.com", user)
+                        new UserRegisteredEvent(UUID.nameUUIDFromBytes("test@mail.com".getBytes(StandardCharsets.UTF_8)).toString(), user)
                         );
     }
 
@@ -35,8 +38,8 @@ public class UserAggregateTest {
     public void testRegisterNewUserButAlreadyExists() {
         final User user = new User("Test", "test@mail.com", "Netherlands", "Hello");
 
-        fixture.given(new UserRegisteredEvent("test@mail.com", user))
-                .when(new RegisterUserCommand("test@mail.com", user))
+        fixture.given(new UserRegisteredEvent(UUID.nameUUIDFromBytes(user.getEmail().getBytes(StandardCharsets.UTF_8)).toString(), user))
+                .when(new RegisterUserCommand(UUID.nameUUIDFromBytes(user.getEmail().getBytes(StandardCharsets.UTF_8)).toString(), user))
                 .expectException(PolicyViolatedException.class)
                 .expectExceptionMessage("Email already exists");
     }
