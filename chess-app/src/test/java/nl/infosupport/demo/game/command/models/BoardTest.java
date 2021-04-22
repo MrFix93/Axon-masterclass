@@ -3,7 +3,7 @@ package nl.infosupport.demo.game.command.models;
 import nl.infosupport.demo.game.command.exceptions.IllegalBoardSquareException;
 import nl.infosupport.demo.game.command.models.pieces.*;
 import nl.infosupport.demo.game.command.models.rules.CheckMateRule;
-import nl.infosupport.demo.game.command.utils.Squares;
+import nl.infosupport.demo.game.command.models.utils.Squares;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

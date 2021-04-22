@@ -2,7 +2,7 @@ package nl.infosupport.demo.game.command.models.rules;
 
 import nl.infosupport.demo.game.command.models.*;
 import nl.infosupport.demo.game.command.models.pieces.King;
-import nl.infosupport.demo.game.command.utils.Moves;
+import nl.infosupport.demo.game.command.models.utils.Moves;
 
 import java.util.Map;
 import java.util.Optional;

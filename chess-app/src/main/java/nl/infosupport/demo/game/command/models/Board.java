@@ -28,7 +28,7 @@ public class Board {
     }
 
     public void make(Move move) throws IllegalChessMoveException {
-        for (ChessMoveRule rule : GameAggregate.rules) {
+        for (ChessMoveRule rule : GameAggregate.getGameRules()) {
             final boolean moveAdheresRule = rule.isValid(move, this);
             if (!moveAdheresRule) {
                 throw new IllegalChessMoveException(rule.getFailureReason(), move, this);
@@ -37,7 +37,9 @@ public class Board {
     }
 
     public boolean isValidMove(Move move) {
-        return GameAggregate.rules.stream().allMatch(rule -> rule.isValid(move, this));
+        return GameAggregate.getGameRules()
+                .stream()
+                .allMatch(rule -> rule.isValid(move, this));
     }
 
     public Move.MoveType getMoveType(Move move) {
