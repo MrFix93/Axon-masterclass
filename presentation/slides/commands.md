@@ -33,14 +33,233 @@ Laten we beginnen met een Aggregate.
         private String country;
         private String shortBio;
 
-        
+
     }
     
 </code></pre>
 </section>
 
-Voorbeeld in de chess app -> User aggregate
+<section>
+<pre><code data-trim data-noescape>
 
+    @Aggregate
+    public class UserAggregate {
+
+        .......
+
+        @CommandHandler //highlight 1
+        @CreationPolicy(value = AggregateCreationPolicy.CREATE_IF_MISSING) //highlight 2 
+        public void handle(RegisterUserCommand registerUserCommand) throws PolicyViolatedException { //highlight 3
+            //do something useful
+        }
+    }
+    
+</code></pre>
+</section>
+
+<section>
+<pre><code data-trim data-noescape>
+
+    @EqualsAndHashCode
+    public class Command {
+        @Getter(onMethod_ = {@TargetAggregateIdentifier}) //highlight
+        private String id;
+
+        public Command() {
+
+        }
+
+        public Command(String id) {
+            this.id = id;
+        }
+    }
+    
+</code></pre>
+</section>
+
+<section>
+<pre><code data-trim data-noescape>
+
+    @EqualsAndHashCode(callSuper = true)
+    @Value
+    @AllArgsConstructor
+    public class RegisterUserCommand extends Command {
+
+        User user;
+
+        public RegisterUserCommand(String id, User user) {
+            super(id);
+            this.user = user;
+        }
+    }
+    
+</code></pre>
+</section>
+
+<section>
+<pre><code data-trim data-noescape>
+
+    @Aggregate
+    public class UserAggregate {
+
+        .......
+
+        @CommandHandler //highlight 1
+        @CreationPolicy(value = AggregateCreationPolicy.CREATE_IF_MISSING) //highlight 2 
+        public void handle(RegisterUserCommand registerUserCommand) throws PolicyViolatedException { //highlight 3
+            if (id != null) {
+                throw new PolicyViolatedException("Email already exists");
+            }
+
+        }
+    }
+    
+</code></pre>
+</section>
+
+<section>
+<pre><code data-trim data-noescape>
+
+    @Aggregate
+    public class UserAggregate {
+
+        .......
+
+        @CommandHandler //highlight 1
+        @CreationPolicy(value = AggregateCreationPolicy.CREATE_IF_MISSING) //highlight 2 
+        public void handle(RegisterUserCommand registerUserCommand) throws PolicyViolatedException { //highlight 3
+            if (id != null) {
+                throw new PolicyViolatedException("Email already exists");
+            }
+
+            final UserRegisteredEvent userRegisteredEvent = new UserRegisteredEvent(registerUserCommand.getId(), registerUserCommand.getUser()); //highlight 1
+
+            apply(userRegisteredEvent); highlight 2
+        }
+    }
+    
+</code></pre>
+</section>
+
+<section>
+<pre><code data-trim data-noescape>
+
+    @Getter
+    @ToString
+    @EqualsAndHashCode
+    public abstract class Event {
+        @Getter
+        @TargetAggregateIdentifier //highlight 1
+        private final String id;
+
+        Event() {
+            this.id = UUID.randomUUID().toString();
+        }
+
+        Event(String id) {
+            this.id = id;
+        }
+    }
+    
+</code></pre>
+</section>
+
+<section>
+<pre><code data-trim data-noescape>
+
+    @EqualsAndHashCode(callSuper = true)
+    @Value
+    public class UserRegisteredEvent extends Event {
+
+        User user;
+
+        public UserRegisteredEvent(String id, User user) {
+            super(id);
+            this.user = user;
+        }
+
+    }
+    
+</code></pre>
+</section>
+
+
+<section>
+<pre><code data-trim data-noescape>
+
+    @Aggregate
+    public class UserAggregate {
+
+        .......
+
+        @CommandHandler
+        @CreationPolicy(value = AggregateCreationPolicy.CREATE_IF_MISSING)
+        public void handle(RegisterUserCommand registerUserCommand) throws PolicyViolatedException {
+            if (id != null) {
+                throw new PolicyViolatedException("Email already exists");
+            }
+
+            final UserRegisteredEvent userRegisteredEvent = new UserRegisteredEvent(registerUserCommand.getId(), registerUserCommand.getUser());
+
+            apply(userRegisteredEvent); 
+        }
+
+        @EventSourcingHandler
+        void handle(UserRegisteredEvent userRegisteredEvent) {
+            this.id = userRegisteredEvent.getId();
+            this.email = userRegisteredEvent.getUser().getEmail();
+            this.name = userRegisteredEvent.getUser().getName();
+            this.country = userRegisteredEvent.getUser().getCountry();
+            this.shortBio = userRegisteredEvent.getUser().getShortBio();
+        }
+    }
+    
+</code></pre>
+</section>
+
+
+<section>
+<pre><code data-trim data-noescape>
+
+    @SpringBootTest
+    public class UserAggregateTest {
+
+    private AggregateTestFixture<UserAggregate> fixture;
+
+    @BeforeEach
+    public void setup() {
+        fixture = new AggregateTestFixture<>(UserAggregate.class);
+    }
+
+    @Test
+    public void testRegisterNewUser() {
+        final User user = new User("Test", "test@mail.com", "Netherlands", "Hello");
+
+        fixture.givenNoPriorActivity()
+                .when(new RegisterUserCommand(UUID.nameUUIDFromBytes(user.getEmail().getBytes(StandardCharsets.UTF_8)).toString(), user))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(
+                        new UserRegisteredEvent(UUID.nameUUIDFromBytes("test@mail.com".getBytes(StandardCharsets.UTF_8)).toString(), user)
+                        );
+    }
+    
+</code></pre>
+</section>
+
+<section>
+<pre><code data-trim data-noescape>
+
+    @Test
+    public void testRegisterNewUser() {
+        fixture.given(new UserRegisteredEvent(UUID.nameUUIDFromBytes(user.getEmail().getBytes(StandardCharsets.UTF_8)).toString(), user))
+                .when(new RegisterUserCommand(UUID.nameUUIDFromBytes(user.getEmail().getBytes(StandardCharsets.UTF_8)).toString(), user))
+                .expectException(PolicyViolatedException.class)
+                .expectExceptionMessage("Email already exists");
+    }
+    
+</code></pre>
+</section>
+Voorbeeld in de chess app -> User aggregate
 
 
 
