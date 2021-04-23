@@ -1,5 +1,7 @@
 # Commands & Aggregates
 
+Note:
+
 In een CQRS-gebaseerde applicatie een belangrijke speler de Aggregate.
 
 Een Aggregate is een entiteit of een group van entiteiten wat altijd een constitente state heeft. 
@@ -20,49 +22,69 @@ de event-storm en dan naar de User.
 
 Laten we beginnen met een Aggregate.
 
-<section>
-<pre><code data-trim data-noescape>
+--
+    
+<pre><code class="java" data-trim>
 
-    @Aggregate
-    public class UserAggregate {
+@Aggregate
+public class UserAggregate {
 
-        @AggregateIdentifier
-        private String id;
-        private String email;
-        private String name;
-        private String country;
-        private String shortBio;
+    @AggregateIdentifier
+    private String id;
+    private String email;
+    private String name;
+    private String country;
+    private String shortBio;
 
-
-    }
+}
     
 </code></pre>
-</section>
 
-<section>
-<pre><code data-trim data-noescape>
+--
+    
+<pre><code class="java" data-trim data-line-numbers="1| 4">
+
+@Aggregate
+public class UserAggregate {
+
+    @AggregateIdentifier
+    private String id;
+    private String email;
+    private String name;
+    private String country;
+    private String shortBio;
+
+}
+    
+</code></pre>
+
+--
+
+<pre><code class="java" data-trim data-noescape data-line-numbers=" | 6 | 7 | 8">
 
     @Aggregate
     public class UserAggregate {
 
         .......
 
-        @CommandHandler //highlight 1
-        @CreationPolicy(value = AggregateCreationPolicy.CREATE_IF_MISSING) //highlight 2 
-        public void handle(RegisterUserCommand registerUserCommand) throws PolicyViolatedException { //highlight 3
+        @CommandHandler
+        @CreationPolicy(value = AggregateCreationPolicy.CREATE_IF_MISSING)
+        public void handle(RegisterUserCommand registerUserCommand) throws PolicyViolatedException {
             //do something useful
         }
     }
     
 </code></pre>
-</section>
 
-<section>
-<pre><code data-trim data-noescape>
+Notes: 
+    CreationPolicy CREATE_IF_MISSING -> dit betekent dat de Aggregate de command moet afhandelen ook als deze niet bestaat. Hier kom ik later op terug wat dat dan precies betekent.
+--
+
+<pre><code class="java" data-trim data-noescape data-line-numbers=" | 3">
 
     @EqualsAndHashCode
     public class Command {
-        @Getter(onMethod_ = {@TargetAggregateIdentifier}) //highlight
+        @Getter(onMethod_ = {@TargetAggregateIdentifier}) 
         private String id;
 
         public Command() {
@@ -75,10 +97,10 @@ Laten we beginnen met een Aggregate.
     }
     
 </code></pre>
-</section>
 
-<section>
-<pre><code data-trim data-noescape>
+--
+
+<pre><code class="java" data-trim data-noescape>
 
     @EqualsAndHashCode(callSuper = true)
     @Value
@@ -94,19 +116,41 @@ Laten we beginnen met een Aggregate.
     }
     
 </code></pre>
-</section>
 
-<section>
-<pre><code data-trim data-noescape>
+--
+
+<pre><code class="java" data-trim data-noescape data-line-numbers=" | 5">
+@Service
+@AllArgsConstructor(onConstructor_ = {@Autowired})
+public class UserCommandService {
+
+    private final CommandGateway commandGateway;
+
+    public CompletableFuture<String> registerUser(User user) {
+        final String id = UUID.nameUUIDFromBytes(user.getEmail().getBytes(StandardCharsets.UTF_8)).toString();
+        final RegisterUserCommand registerUserCommand = new RegisterUserCommand(id, user);
+
+        return commandGateway.send(registerUserCommand);
+    }
+}
+</code></pre>
+
+Notes:
+    - Stuurt command op de CommandGateway 
+    - De Aggregate die een command handler hierop heeft zal dit verwerken
+
+--
+
+<pre><code class="java" data-trim data-noescape>
 
     @Aggregate
     public class UserAggregate {
 
         .......
 
-        @CommandHandler //highlight 1
-        @CreationPolicy(value = AggregateCreationPolicy.CREATE_IF_MISSING) //highlight 2 
-        public void handle(RegisterUserCommand registerUserCommand) throws PolicyViolatedException { //highlight 3
+        @CommandHandler
+        @CreationPolicy(value = AggregateCreationPolicy.CREATE_IF_MISSING)
+        public void handle(RegisterUserCommand registerUserCommand) throws PolicyViolatedException {
             if (id != null) {
                 throw new PolicyViolatedException("Email already exists");
             }
@@ -115,41 +159,52 @@ Laten we beginnen met een Aggregate.
     }
     
 </code></pre>
-</section>
 
-<section>
-<pre><code data-trim data-noescape>
+Notes:
+    - Waarom check of id niet gelijk is aan null? Nou wanneer je create if missing gebruikt, dan zal die in de command handler komen wanneer de id nog niet bestaat.
+    
+    Want stel je zou geen create if missing gebruiken dan zal Axon je vertellen dat die de command NIET kan verwerken omdat er geen aggregate is die het meegegeven id heeft!
+
+    Maar als dat zo is, dan kan je je waarschijnlijk wel afvragen, waarom moeten we hier dan nog een id != null check doen?
+
+    Nou, met create if missing gaat die dus naar een nieuwe aggregate die een id nog niet heeft, OF hij gaat naar een bestaande aggregate die dat ID wel heeft.
+
+    En als die al wel bestaat, dan wil je (afhankelijk van je use case natuurlijk) in dit geval niet nog een keer uitvoeren. Want uiteindelijk gaan we in deze command handler een user registreren.
+
+--
+
+<pre><code class="java" data-trim data-noescape>
 
     @Aggregate
     public class UserAggregate {
 
         .......
 
-        @CommandHandler //highlight 1
-        @CreationPolicy(value = AggregateCreationPolicy.CREATE_IF_MISSING) //highlight 2 
-        public void handle(RegisterUserCommand registerUserCommand) throws PolicyViolatedException { //highlight 3
+        @CommandHandler
+        @CreationPolicy(value = AggregateCreationPolicy.CREATE_IF_MISSING)
+        public void handle(RegisterUserCommand registerUserCommand) throws PolicyViolatedException {
             if (id != null) {
                 throw new PolicyViolatedException("Email already exists");
             }
 
-            final UserRegisteredEvent userRegisteredEvent = new UserRegisteredEvent(registerUserCommand.getId(), registerUserCommand.getUser()); //highlight 1
+            final UserRegisteredEvent userRegisteredEvent = new UserRegisteredEvent(registerUserCommand.getId(), registerUserCommand.getUser());
 
-            apply(userRegisteredEvent); highlight 2
+            apply(userRegisteredEvent);
         }
     }
     
 </code></pre>
-</section>
 
-<section>
-<pre><code data-trim data-noescape>
+--
+
+<pre><code class="java" data-trim data-noescape data-line-numbers=" | 6">
 
     @Getter
     @ToString
     @EqualsAndHashCode
     public abstract class Event {
         @Getter
-        @TargetAggregateIdentifier //highlight 1
+        @TargetAggregateIdentifier
         private final String id;
 
         Event() {
@@ -162,10 +217,10 @@ Laten we beginnen met een Aggregate.
     }
     
 </code></pre>
-</section>
 
-<section>
-<pre><code data-trim data-noescape>
+--
+
+<pre><code class="java" data-trim data-noescape>
 
     @EqualsAndHashCode(callSuper = true)
     @Value
@@ -181,11 +236,10 @@ Laten we beginnen met een Aggregate.
     }
     
 </code></pre>
-</section>
 
+--
 
-<section>
-<pre><code data-trim data-noescape>
+<pre><code class="java" data-trim data-noescape>
 
     @Aggregate
     public class UserAggregate {
@@ -215,11 +269,18 @@ Laten we beginnen met een Aggregate.
     }
     
 </code></pre>
-</section>
 
+Notes:
+    - Het is dus heel belangrijk dat het zetten van de waardes van de aggregate echt pas in de EventSourcingHandler gebeurd en NIET in de command handler.
+    
+    Nou heel mooi dat het allemaal werkt, tenminste dat zeg ik nu en jullie vertrouwen me gewoon blind en misschien leg ik wel dingen uit die helemaal niet kloppen. 
 
-<section>
-<pre><code data-trim data-noescape>
+    En daarom moet je natuurlijk wel unit testen schrijven om de concluderen dat het ook echt goed werkt. 
+
+    Maar hoe schrijf je voor dit unit testen? Bedankt voor het vragen! Dat is namelijk een mooi bruggetje naar de volgende slide ;)
+--
+
+<pre><code class="java" data-trim data-noescape data-line-numbers=" | 4 | 8 | 15-21">
 
     @SpringBootTest
     public class UserAggregateTest {
@@ -244,13 +305,13 @@ Laten we beginnen met een Aggregate.
     }
     
 </code></pre>
-</section>
 
-<section>
-<pre><code data-trim data-noescape>
+--
+
+<pre><code class="java" data-trim data-noescape>
 
     @Test
-    public void testRegisterNewUser() {
+    public void testRegisterExistingUser() {
         fixture.given(new UserRegisteredEvent(UUID.nameUUIDFromBytes(user.getEmail().getBytes(StandardCharsets.UTF_8)).toString(), user))
                 .when(new RegisterUserCommand(UUID.nameUUIDFromBytes(user.getEmail().getBytes(StandardCharsets.UTF_8)).toString(), user))
                 .expectException(PolicyViolatedException.class)
@@ -258,10 +319,46 @@ Laten we beginnen met een Aggregate.
     }
     
 </code></pre>
-</section>
-Voorbeeld in de chess app -> User aggregate
+
+--
+
+<pre><code class="java" data-trim data-noescape>
+
+    @RestController
+    @RequestMapping("/users")
+    public class UserCommandController {
+
+        private UserCommandService userCommandService;
+
+        @Autowired
+        public UserCommandController(UserCommandService userCommandService) {
+            this.userCommandService = userCommandService;
+        }
+
+        @PostMapping("")
+        public ResponseEntity<Void> registerUser(@Valid @RequestBody User user) throws ExecutionException, InterruptedException {
+
+            userCommandService.registerUser(user).get();
+
+            return ResponseEntity.accepted().location(URI.create("/users")).build();
+        }
+    }
+</code></pre>
+
+--
+
+Thoughts so far?
+
+--
+
+## MatchMaker assignment
+
+<pre><code class="bash">
+
+  git clone https://github.com/MrFix93/Axon-masterclass.git
 
 
+</code></pre>
 
 Note:
 
