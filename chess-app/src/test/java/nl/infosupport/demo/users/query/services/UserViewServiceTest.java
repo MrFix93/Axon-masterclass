@@ -8,7 +8,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
@@ -24,7 +26,7 @@ class UserViewServiceTest {
     @Test
     void testFindAll() {
         //Given
-        final User user = new User("Test@email.com", "Test", "Netherlands", "Hello I am test");
+        final User user = new User("id", "Test@email.com", "Test", "Netherlands", "Hello I am test");
         when(userRepository.findAll()).thenReturn(List.of(user));
 
         //When
@@ -37,7 +39,7 @@ class UserViewServiceTest {
     @Test
     void testCreateOrUpdate() {
         //Given
-        final User user = new User("Test@email.com", "Test", "Netherlands", "Hello I am test");
+        final User user = new User(UUID.nameUUIDFromBytes("Test@email.com".getBytes(StandardCharsets.UTF_8)).toString(), "Test@email.com", "Test", "Netherlands", "Hello I am test");
 
         //When
         userViewService.createOrUpdate(user);

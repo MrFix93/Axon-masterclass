@@ -28,7 +28,7 @@ class UserQueryServiceTest {
     @Test
     void testFindAllUsers() throws ExecutionException, InterruptedException {
         //Arrange
-        final User user = new User("Test@email.com", "Test", "Netherlands", "Hello I am test");
+        final User user = new User("id", "Test@email.com", "Test", "Netherlands", "Hello I am test");
 
         when(queryGateway.query(anyString(), isNull(), any(ResponseType.class)))
                 .thenReturn(CompletableFuture.completedFuture(Collections.singletonList(user)));

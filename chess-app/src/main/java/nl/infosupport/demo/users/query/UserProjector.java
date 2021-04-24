@@ -16,7 +16,7 @@ public class UserProjector {
 
     @EventHandler
     public void handle(UserRegisteredEvent userRegisteredEvent) {
-        final User user = new User(userRegisteredEvent.getId(), userRegisteredEvent.getUser().getName(), userRegisteredEvent.getUser().getCountry(), userRegisteredEvent.getUser().getShortBio());
+        final User user = new User(userRegisteredEvent.getId(), userRegisteredEvent.getUser().getEmail(), userRegisteredEvent.getUser().getName(), userRegisteredEvent.getUser().getCountry(), userRegisteredEvent.getUser().getShortBio());
 
         userViewService.createOrUpdate(user);
     }
