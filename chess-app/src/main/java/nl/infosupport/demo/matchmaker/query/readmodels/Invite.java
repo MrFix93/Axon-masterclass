@@ -3,6 +3,7 @@ package nl.infosupport.demo.matchmaker.query.readmodels;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +15,8 @@ import javax.persistence.Id;
 public class Invite {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
     String id;
     String player1;
     String player2;
