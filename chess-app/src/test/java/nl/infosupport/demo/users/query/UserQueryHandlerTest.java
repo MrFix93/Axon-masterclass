@@ -25,7 +25,7 @@ class UserQueryHandlerTest {
     @Test
     void testFindAllUsers() {
         //Given
-        final User user = new User("Test@email.com", "Test", "Netherlands", "Hello I am test");
+        final User user = new User("id", "Test@email.com", "Test", "Netherlands", "Hello I am test");
         when(userViewService.findAll()).thenReturn(List.of(user));
 
         //When
@@ -34,6 +34,7 @@ class UserQueryHandlerTest {
         //Then
         Assertions.assertAll(
                 () -> assertThat(foundUsers).isNotNull().isNotEmpty().hasSize(1),
+                () -> AssertionsForClassTypes.assertThat(foundUsers.get(0).getId()).isEqualTo(user.getId()),
                 () -> AssertionsForClassTypes.assertThat(foundUsers.get(0).getEmail()).isEqualTo(user.getEmail()),
                 () -> AssertionsForClassTypes.assertThat(foundUsers.get(0).getName()).isEqualTo(user.getName()),
                 () -> AssertionsForClassTypes.assertThat(foundUsers.get(0).getCountry()).isEqualTo(user.getCountry()),

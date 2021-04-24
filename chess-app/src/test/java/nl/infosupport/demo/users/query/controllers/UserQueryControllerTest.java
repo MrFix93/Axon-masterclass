@@ -37,7 +37,7 @@ class UserQueryControllerTest {
     @Test
     void testGetUsers200() throws Exception {
         // Given
-        final User user = new User("Test@email.com", "Test", "Netherlands", "Hello I am test");
+        final User user = new User("id", "Test@email.com", "Test", "Netherlands", "Hello I am test");
         when(userQueryService.findAllUsers()).thenReturn(List.of(user));
 
         // When & Then
