@@ -5,26 +5,25 @@ Note:
 Zoals eerder besproken door Peter bestaan er dus Command en Query models.
 Ook dit bestaat in Axon Framework. In een CQRS-gebaseerde applicatie is een belangrijke speler de Aggregate.
 
-Een Aggregate is een entiteit of een group van entiteiten wat altijd een constitente state heeft. 
-Alle logica en state changes gaan door de aggregate heen, dit maakt de Aggregate "the prime building block" 
+Een Aggregate is een entiteit of een group van entiteiten wat altijd een constitente state heeft.
+Alle logica en state changes gaan door de aggregate heen, dit maakt de Aggregate "the prime building block"
 voor het implementeren van een Command Model in elk CQRS-gebaseerde applicatie.
 
-Ik heb zojuist vertelt dat alle state changes door een aggregate heen gaan, maar hoe gaan die dan 
+Ik heb zojuist vertelt dat alle state changes door een aggregate heen gaan, maar hoe gaan die dan
 door een Aggregate heen? Dat gebeurt doormiddel van "Commands".
 
 Een Command beschrijft de intentie (meestal een mutatie) van de actie en levert eventuele extra informatie aan
-om de actie uit te voeren. 
+om de actie uit te voeren.
 
 Bijvoorbeeld het aanmaken van iets.
 
-
-Deze twee concepten komen ook terug in het Axon Framework. Laten we kijken naar 
+Deze twee concepten komen ook terug in het Axon Framework. Laten we kijken naar
 de event-storm en dan naar de User.
 
 Laten we beginnen met een Aggregate.
 
 --
-    
+
 <pre><code class="java" data-trim data-line-numbers=" | 1 | 4">
 
 @Aggregate
@@ -59,8 +58,8 @@ public class UserAggregate {
     
 </code></pre>
 
-Notes: 
-    CreationPolicy CREATE_IF_MISSING -> dit betekent dat de Aggregate de command moet afhandelen ook als deze niet bestaat. Hier kom ik later op terug wat dat dan precies betekent.
+Notes:
+CreationPolicy CREATE_IF_MISSING -> dit betekent dat de Aggregate de command moet afhandelen ook als deze niet bestaat. Hier kom ik later op terug wat dat dan precies betekent.
 --
 
 <pre><code class="java" data-trim data-noescape data-line-numbers=" | 3">
@@ -118,9 +117,7 @@ public class UserCommandService {
 }
 </code></pre>
 
-Notes:
-    - Stuurt command op de CommandGateway 
-    - De Aggregate die een command handler hierop heeft zal dit verwerken
+Notes: - Stuurt command op de CommandGateway - De Aggregate die een command handler hierop heeft zal dit verwerken
 
 --
 
@@ -143,9 +140,8 @@ Notes:
     
 </code></pre>
 
-Notes:
-    - Waarom check of id niet gelijk is aan null? Nou wanneer je create if missing gebruikt, dan zal die in de command handler komen wanneer de id nog niet bestaat.
-    
+Notes: - Waarom check of id niet gelijk is aan null? Nou wanneer je create if missing gebruikt, dan zal die in de command handler komen wanneer de id nog niet bestaat.
+
     Want stel je zou geen create if missing gebruiken dan zal Axon je vertellen dat die de command NIET kan verwerken omdat er geen aggregate is die het meegegeven id heeft!
 
     Maar als dat zo is, dan kan je je waarschijnlijk wel afvragen, waarom moeten we hier dan nog een id != null check doen?
@@ -253,14 +249,14 @@ Notes:
     
 </code></pre>
 
-Notes:
-    - Het is dus heel belangrijk dat het zetten van de waardes van de aggregate echt pas in de EventSourcingHandler gebeurd en NIET in de command handler.
-    
-    Nou heel mooi dat het allemaal werkt, tenminste dat zeg ik nu en jullie vertrouwen me gewoon blind en misschien leg ik wel dingen uit die helemaal niet kloppen. 
+Notes: - Het is dus heel belangrijk dat het zetten van de waardes van de aggregate echt pas in de EventSourcingHandler gebeurd en NIET in de command handler.
 
-    En daarom moet je natuurlijk wel unit testen schrijven om de concluderen dat het ook echt goed werkt. 
+    Nou heel mooi dat het allemaal werkt, tenminste dat zeg ik nu en jullie vertrouwen me gewoon blind en misschien leg ik wel dingen uit die helemaal niet kloppen.
+
+    En daarom moet je natuurlijk wel unit testen schrijven om de concluderen dat het ook echt goed werkt.
 
     Maar hoe schrijf je voor dit unit testen? Bedankt voor het vragen! Dat is namelijk een mooi bruggetje naar de volgende slide ;)
+
 --
 
 <pre><code class="java" data-trim data-noescape data-line-numbers=" | 4 | 8 | 15-21">
