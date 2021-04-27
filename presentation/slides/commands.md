@@ -2,19 +2,20 @@
 
 Note:
 
-In een CQRS-gebaseerde applicatie een belangrijke speler de Aggregate.
+Zoals eerder besproken door Peter bestaan er dus Command en Query models.
+Ook dit bestaat in Axon Framework. In een CQRS-gebaseerde applicatie is een belangrijke speler de Aggregate.
 
 Een Aggregate is een entiteit of een group van entiteiten wat altijd een constitente state heeft. 
 Alle logica en state changes gaan door de aggregate heen, dit maakt de Aggregate "the prime building block" 
 voor het implementeren van een Command Model in elk CQRS-gebaseerde applicatie.
 
-Hier boven heb ik vertelt dat alle state changes door een aggregate heen gaan, maar hoe gaan die dan 
+Ik heb zojuist vertelt dat alle state changes door een aggregate heen gaan, maar hoe gaan die dan 
 door een Aggregate heen? Dat gebeurt doormiddel van "Commands".
 
 Een Command beschrijft de intentie (meestal een mutatie) van de actie en levert eventuele extra informatie aan
 om de actie uit te voeren. 
 
-Bijvoorbeeld en aanmaken van iets.
+Bijvoorbeeld het aanmaken van iets.
 
 
 Deze twee concepten komen ook terug in het Axon Framework. Laten we kijken naar 
@@ -24,25 +25,7 @@ Laten we beginnen met een Aggregate.
 
 --
     
-<pre><code class="java" data-trim>
-
-@Aggregate
-public class UserAggregate {
-
-    @AggregateIdentifier
-    private String id;
-    private String email;
-    private String name;
-    private String country;
-    private String shortBio;
-
-}
-    
-</code></pre>
-
---
-    
-<pre><code class="java" data-trim data-line-numbers="1| 4">
+<pre><code class="java" data-trim data-line-numbers=" | 1 | 4">
 
 @Aggregate
 public class UserAggregate {
@@ -119,7 +102,7 @@ Notes:
 
 --
 
-<pre><code class="java" data-trim data-noescape data-line-numbers=" | 5">
+<pre><code class="java" data-trim data-noescape data-line-numbers=" | 5 | 7-11">
 @Service
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 public class UserCommandService {
@@ -362,17 +345,5 @@ Thoughts so far?
 
 Note:
 
-- pre-defined event-storm presenteren + uitwerken
-- demo eerste stuk van de event-storm (command)
-- begin met een aggregate
-- hoe wordt een aggregate getriggered? -> CommandHandler
-- CommandHandler -> logic + Event
-- Events definieren
-- Event publishen
-- Event Sourcing
-- Hoe test je dit? -> TestFixture
-- Debug statements toevoegen om het proces te volgen
-- endpoints
-- thoughts so far?
-
+Kijk rond er is een User Aggregate en een MatchMaker Aggregate
 Doe het zelf in Matchmaker
