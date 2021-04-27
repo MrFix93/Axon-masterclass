@@ -17,15 +17,18 @@
    - Commands & Aggregates
    - Queries
    - Sagas
-1. Afsluitende opdracht
-1. Heenzending
+1. Final Challange
+1. The End
 
 --
 
-## Spelregels
+## Workshop
 
-- Van 15:00 tot 18:00
-- Geef gerust aan als:
-  - Je vragen hebt
-  - Als het te snel (of te langzaam) gaat
-  - Als je behoefte hebt aan een pauze
+- 15:00 till 18:00
+- If you have any questions; let us know
+- If we go to fast, or to slow; let us know
+- If you need a break; let us know
+
+--
+
+<!-- .slide: data-background-image="https://media.giphy.com/media/26BRHKYhKLd6PlwsM/source.gif" -->
