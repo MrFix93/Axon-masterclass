@@ -58,20 +58,7 @@
       </div>
     </div>
 
-    <<<<<<< Updated upstream
-    <script src="reveal.js/dist/reveal.js"></script>
-    <script src="reveal.js/plugin/notes/notes.js"></script>
-    <script src="reveal.js/plugin/markdown/markdown.js"></script>
-    <script src="reveal.js/plugin/highlight/highlight.js"></script>
-    <script>
-            Reveal.initialize({
-              hash: true,
-
-              // Learn about plugins: https://revealjs.com/plugins/
-              plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
-      =======
-          <script src="/reveal.js/dist/reveal.js">
-    </script>
+    <script src="/reveal.js/dist/reveal.js"></script>
     <script src="/reveal.js/plugin/notes/notes.js"></script>
     <script src="/reveal.js/plugin/markdown/markdown.js"></script>
     <script src="/reveal.js/plugin/highlight/highlight.js"></script>
@@ -79,15 +66,14 @@
 
     <script src="/reveal.js/lib/deflate.js"></script>
     <script>
-            Reveal.initialize({
-              hash: true,
-              dependencies: [
-                { src: "//cdn.jsdelivr.net/npm/reveal-plantuml" },
-                { src: "/reveal.js/plugin/plantuml.js", async: true },
-              ],
-              plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom],
-      >>>>>>> Stashed changes
-            });
+      Reveal.initialize({
+        hash: true,
+        dependencies: [
+          { src: "//cdn.jsdelivr.net/npm/reveal-plantuml" },
+          { src: "/reveal.js/plugin/plantuml.js", async: true },
+        ],
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom],
+      });
     </script>
   </body>
 </html>

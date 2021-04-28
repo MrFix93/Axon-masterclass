@@ -21,7 +21,9 @@ In ons voorbeeld kunnen we een saga defineren om het Game Time Over 'Event' in t
 
 --
 
-```java
+<pre>
+<code class="java" data-trim data-noescape data-line-numbers="1|7|6|10|13,14">
+<script type="text/template">
 @Saga
 class GameTimerSaga {
 
@@ -41,7 +43,9 @@ class GameTimerSaga {
     }
 
 }
-```
+</script>
+</code>
+<pre>
 
 Note:
 Hoe doen we dat dan in Axon? Door de annotatie @Saga en met '@SagaEventHandlers'.

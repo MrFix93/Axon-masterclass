@@ -64,7 +64,7 @@ Let's see the domain model..
 Creates a view from the handled events
 
 <pre>
-<code class="java" data-trim data-line-numbers="1,4">
+<code class="java" data-trim data-line-numbers="1|4">
     @EventHandler
     public void handle(UserRegisteredEvent userRegisteredEvent) {
         final User user = new User();
@@ -80,14 +80,16 @@ Creates a view from the handled events
 Handles the queries as published on the query gateway
 
 <pre>
-<code class="java" data-trim data-line-numbers="3">
+<code class="java" data-trim data-noescape data-line-numbers="3">
+<script type="text/template">
     private final UserViewService userViewService;
 
     @QueryHandler(queryName = "findAllUsers")
     public List<User> findAll() {
         return userViewService.findAll();
     }
-}
+
+</script>
 </code>
 </pre>
 
@@ -98,7 +100,8 @@ Handles the queries as published on the query gateway
 Sends a query over the Query Gateway
 
 <pre>
-<code class="java" data-trim data-line-numbers="3,11">
+<code class="java" data-trim data-noescape data-line-numbers="3|11">
+<script type="text/template">
 public class UserQueryService {
 
     private final QueryGateway queryGateway;
@@ -113,6 +116,7 @@ public class UserQueryService {
                 .get();
     }
 }
+</script>
 </code>
 </pre>
 
