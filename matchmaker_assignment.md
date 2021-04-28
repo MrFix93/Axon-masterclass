@@ -1,0 +1,16 @@
+- Take a look around the project, you can for now ignore the "query" package
+- Create a Command for sending an invite
+    - Make sure the command accepts two players for the invite (can be as String or dto, that's up to you)
+- Make sure the command gets send in the command gateway
+- Make sure the Aggregate handles the command
+    - Add logic to check if the invited players exists
+    - Publish the Event (also make the Event if it doesn't exist) when the command has been succesfully handled
+    - Event source the published event so that Invite will be saved (make sure the invitation status is also saved!)
+
+-  Create a Command for accepting/declining an invite
+    - Make sure the command accepts two players for the invite and has a invitation status or something(can be as String or dto, that's up to you)
+- Make sure the command gets send in the command gateway
+- Make sure the Aggregate handles the command
+    - Add logic to check if the Invite exists and if the invitation status is open
+    - Publish the Event (also make the Event if it doesn't exist) when the command has been succesfully handled
+    - Event source the published event so that Invite will be updated with the new state
