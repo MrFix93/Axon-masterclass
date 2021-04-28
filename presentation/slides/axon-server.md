@@ -26,5 +26,3 @@ Dit kan je starten om te kijken of alles naar verwachting werkt.
 --
 
 # Demo
-
---
