@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="/reveal.js/dist/reset.css" />
+    <link rel="stylesheet" href="/reveal.js/dist/reveal.css" />
+    <link rel="stylesheet" href="/reveal.js/dist/theme/black.css" id="theme" />
+
+    <link
+      rel="stylesheet"
+      href="/reveal.js/plugin/highlight/darcula.css"
+      id="highlight-theme"
+    />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section
+          data-markdown="slides/introduction.md"
+          data-separator-vertical="--\n"
+        ></section>
+        <section
+          data-markdown="slides/concepts.md"
+          data-separator-vertical="--\n"
+        ></section>
+        <section
+          data-markdown="slides/app.md"
+          data-separator-vertical="--\n"
+        ></section>
+        <section
+          data-markdown="slides/commands.md"
+          data-separator-vertical="--\n"
+        ></section>
+        <section
+          data-markdown="slides/queries.md"
+          data-separator-vertical="--\n"
+        ></section>
+        <section
+          data-markdown="slides/sagas.md"
+          data-separator-vertical="--\n"
+        ></section>
+        <section
+          data-markdown="slides/axon-server.md"
+          data-separator-vertical="--\n"
+        ></section>
+        <section
+          data-markdown="slides/diy.md"
+          data-separator-vertical="--\n"
+        ></section>
+        <section data-markdown># Heenzending</section>
+      </div>
+    </div>
+
+    <script src="/reveal.js/dist/reveal.js"></script>
+    <script src="/reveal.js/plugin/notes/notes.js"></script>
+    <script src="/reveal.js/plugin/markdown/markdown.js"></script>
+    <script src="/reveal.js/plugin/highlight/highlight.js"></script>
+    <script src="/reveal.js/plugin/zoom/zoom.js"></script>
+
+    <script src="/reveal.js/lib/deflate.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        dependencies: [
+          { src: "//cdn.jsdelivr.net/npm/reveal-plantuml" },
+          { src: "/reveal.js/plugin/plantuml.js", async: true },
+        ],
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom],
+      });
+    </script>
+  </body>
+</html>
